@@ -1,0 +1,33 @@
+name: Build
+
+on:
+  pull_request:
+    branches: [ main ]
+
+
+jobs:
+  test-features:
+    name: build app
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java SDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: adopt
+
+      - name: Allow gradlew to execute
+        run: chmod +x gradlew
+
+      - name: Build with gradle
+        run: ./gradlew build
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: SpotifyStats.apk
+          path: app/build/outputs/apk/debug/app-debug.apk
