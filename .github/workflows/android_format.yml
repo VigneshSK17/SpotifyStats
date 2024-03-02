@@ -1,0 +1,21 @@
+name: Format
+
+on:
+  push:
+    branches: [ main ]
+
+
+
+jobs:
+  format-code:
+    name: format java code
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run formatting
+        uses: axel-op/googlejavaformat-action@v3
+        with:
+          args: "--skip-sorting-imports --replace"
