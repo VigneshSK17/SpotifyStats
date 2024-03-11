@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.function.Consumer;
 
 import okhttp3.Call;
@@ -25,6 +26,7 @@ public class SpotifyApi {
     private FailureCallback failureCallback;
     private OkHttpClient okHttpClient;
 
+    // TODO: Determine if more time ranges can be used
     public enum TimeRange {
         /** 1 month */
         SHORT_TERM("short_term"),
@@ -82,7 +84,9 @@ public class SpotifyApi {
                 successConsumer,
                 "https://api.spotify.com/v1/me/top/tracks?limit=" + limit + "&time_range=" + timeRange.getValue()
         );
+        // TODO: Extract soundbite
     }
+
 
     /**
      * Creates request for API data and retrieves JSON
@@ -105,6 +109,7 @@ public class SpotifyApi {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     final JSONObject jsonObject = new JSONObject(response.body().string());
+                    // TODO: Convert JSON to object
                     successConsumer.accept(jsonObject);
                 } catch (JSONException e) {
                     failureCallback.onFailure(e);
