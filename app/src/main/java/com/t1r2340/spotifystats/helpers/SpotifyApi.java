@@ -26,6 +26,8 @@ public class SpotifyApi {
     private FailureCallback failureCallback;
     private OkHttpClient okHttpClient;
 
+    private Call call;
+
     // TODO: Determine if more time ranges can be used
     public enum TimeRange {
         /** 1 month */
@@ -46,17 +48,18 @@ public class SpotifyApi {
         }
     }
 
-    public SpotifyApi(FailureCallback failureCallback, String accessToken, OkHttpClient okHttpClient) {
+    public SpotifyApi(FailureCallback failureCallback, String accessToken, OkHttpClient okHttpClient, Call mCall) {
         this.failureCallback = failureCallback;
         this.accessToken = accessToken;
         this.okHttpClient = okHttpClient;
+        this.call = mCall;
     }
 
     /**
      * Gets user profile
      * @param successConsumer consumer for successful response
      */
-    public void getProfile(Consumer<JSONObject> successConsumer) {
+    public void getProfile(Consumer<String> successConsumer) {
         getJson(successConsumer, "https://api.spotify.com/v1/me");
     }
 
@@ -66,7 +69,7 @@ public class SpotifyApi {
      * @param limit number of artists to retrieve
      * @param timeRange time range for top artists
      */
-    public void getTopArtists(Consumer<JSONObject> successConsumer, int limit, TimeRange timeRange) {
+    public void getTopArtists(Consumer<String> successConsumer, int limit, TimeRange timeRange) {
         getJson(
                 successConsumer,
                 "https://api.spotify.com/v1/me/top/artists?limit=" + limit + "&time_range=" + timeRange.getValue()
@@ -79,7 +82,7 @@ public class SpotifyApi {
      * @param limit number of tracks to retrieve
      * @param timeRange time range for top tracks
      */
-    public void getTopTracks(Consumer<JSONObject> successConsumer, int limit, TimeRange timeRange) {
+    public void getTopTracks(Consumer<String> successConsumer, int limit, TimeRange timeRange) {
         getJson(
                 successConsumer,
                 "https://api.spotify.com/v1/me/top/tracks?limit=" + limit + "&time_range=" + timeRange.getValue()
@@ -93,11 +96,14 @@ public class SpotifyApi {
      * @param successConsumer consumer for successful response
      * @param url url for API request
      */
-    private void getJson(Consumer<JSONObject> successConsumer, String url) {
+    private void getJson(Consumer<String> successConsumer, String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .build();
+
+        cancelCall();
+        call = okHttpClient.newCall(request);
 
         okHttpClient.newCall(request).enqueue(new Callback() {
             @Override
@@ -109,13 +115,22 @@ public class SpotifyApi {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     final JSONObject jsonObject = new JSONObject(response.body().string());
-                    // TODO: Convert JSON to object
-                    successConsumer.accept(jsonObject);
+                    // TODO: Convert JSON to object, not string
+                    successConsumer.accept(jsonObject.toString(3));
                 } catch (JSONException e) {
                     failureCallback.onFailure(e);
                 }
             }
         });
+    }
+
+    /**
+     * Cancels the current API call
+     */
+    private void cancelCall() {
+        if (call != null) {
+            call.cancel();
+        }
     }
 
 }
