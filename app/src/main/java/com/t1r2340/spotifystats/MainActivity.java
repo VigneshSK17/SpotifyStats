@@ -143,6 +143,7 @@ public class MainActivity extends AppCompatActivity {
         try {
           final JSONObject jsonObject = new JSONObject(response.body().string());
           //setTextAsync(jsonObject.toString(3), profileTextView);
+          Log.d("JSON", jsonObject.toString(3));
         } catch (JSONException e) {
           Log.d("JSON", "Failed to parse data: " + e);
           runOnUiThread(() -> {
