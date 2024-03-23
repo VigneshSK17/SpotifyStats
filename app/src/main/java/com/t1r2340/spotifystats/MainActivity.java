@@ -14,6 +14,7 @@ import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.helpers.FailureCallback;
 import com.t1r2340.spotifystats.helpers.SpotifyApi;
+import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -127,8 +128,11 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
     }
 
     // Create a request to get the user profile
-    spotifyApi.getProfile((jsonObject) -> {
-      Log.d("JSON", jsonObject);
+    spotifyApi.getProfile((SpotifyProfile jsonObject) -> {
+      Log.d("JSON", jsonObject.toString());
+
+
+
     });
 
   }
