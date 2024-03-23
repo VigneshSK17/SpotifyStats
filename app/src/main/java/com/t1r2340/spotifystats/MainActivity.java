@@ -15,6 +15,8 @@ import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.helpers.FailureCallback;
 import com.t1r2340.spotifystats.helpers.SpotifyApi;
 import com.t1r2340.spotifystats.models.api.SpotifyProfile;
+import com.t1r2340.spotifystats.models.api.TopArtists;
+import com.t1r2340.spotifystats.models.api.TopTracks;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -128,12 +130,18 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
     }
 
     // Create a request to get the user profile
-    spotifyApi.getProfile((SpotifyProfile jsonObject) -> {
+//    spotifyApi.getProfile((SpotifyProfile jsonObject) -> {
+//      Log.d("JSON", jsonObject.toString());
+//    });
+
+    // TODO: Create class for top artists and test here
+    spotifyApi.getTopArtists((TopArtists jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
+    }, 5, SpotifyApi.TimeRange.LONG_TERM);
 
-
-
-    });
+    spotifyApi.getTopTracks((TopTracks jsonObject) -> {
+      Log.d("JSON", jsonObject.toString());
+    }, 5, SpotifyApi.TimeRange.SHORT_TERM);
 
   }
 
@@ -157,7 +165,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
     return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
             .setShowDialog(false)
-            .setScopes(new String[] { "user-read-email" }) // <--- Change the scope of your requested token here
+            .setScopes(new String[] { "user-read-email", "user-follow-read", "user-top-read" }) // <--- Change the scope of your requested token here
             .setCampaign("your-campaign-token")
             .build();
   }

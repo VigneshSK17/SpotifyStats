@@ -1,8 +1,12 @@
 package com.t1r2340.spotifystats.helpers;
 
+import android.util.Log;
+
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.t1r2340.spotifystats.models.api.SpotifyProfile;
+import com.t1r2340.spotifystats.models.api.TopArtists;
+import com.t1r2340.spotifystats.models.api.TopTracks;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -90,10 +94,10 @@ public class SpotifyApi {
      * @param limit number of artists to retrieve
      * @param timeRange time range for top artists
      */
-    public void getTopArtists(Consumer<String> successConsumer, int limit, TimeRange timeRange) {
+    public void getTopArtists(Consumer<TopArtists> successConsumer, int limit, TimeRange timeRange) {
         getJson(
                 successConsumer,
-                String.class,
+                TopArtists.class,
                 "https://api.spotify.com/v1/me/top/artists?limit=" + limit + "&time_range=" + timeRange.getValue()
         );
     }
@@ -104,10 +108,10 @@ public class SpotifyApi {
      * @param limit number of tracks to retrieve
      * @param timeRange time range for top tracks
      */
-    public void getTopTracks(Consumer<String> successConsumer, int limit, TimeRange timeRange) {
+    public void getTopTracks(Consumer<TopTracks> successConsumer, int limit, TimeRange timeRange) {
         getJson(
                 successConsumer,
-                String.class,
+                TopTracks.class,
                 "https://api.spotify.com/v1/me/top/tracks?limit=" + limit + "&time_range=" + timeRange.getValue()
         );
         // TODO: Extract soundbite
