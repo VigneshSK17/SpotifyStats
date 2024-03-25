@@ -1,5 +1,13 @@
 package com.t1r2340.spotifystats.helpers;
 
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.t1r2340.spotifystats.models.api.SpotifyProfile;
+import com.t1r2340.spotifystats.models.api.TopArtists;
+import com.t1r2340.spotifystats.models.api.TopTracks;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,13 +30,21 @@ import okhttp3.Response;
  */
 public class SpotifyApi {
 
+    /** Access token for Spotify API */
     private String accessToken;
+    /** Callback for API call failures */
     private FailureCallback failureCallback;
+    /** HTTP client for API calls */
     private OkHttpClient okHttpClient;
 
+    /** Current API call */
     private Call call;
+    /** JSON parser */
+    private Gson gson;
 
-    // TODO: Determine if more time ranges can be used
+    /**
+     * Time range for top artists and tracks
+     */
     public enum TimeRange {
         /** 1 month */
         SHORT_TERM("short_term"),
@@ -48,19 +64,28 @@ public class SpotifyApi {
         }
     }
 
+    /**
+     * Constructor for Spotify API
+     * @param failureCallback callback for API call failures
+     * @param accessToken access token for Spotify API
+     * @param okHttpClient HTTP client for API calls
+     * @param mCall current API call
+     */
     public SpotifyApi(FailureCallback failureCallback, String accessToken, OkHttpClient okHttpClient, Call mCall) {
         this.failureCallback = failureCallback;
         this.accessToken = accessToken;
         this.okHttpClient = okHttpClient;
         this.call = mCall;
+
+        this.gson = new Gson();
     }
 
     /**
      * Gets user profile
      * @param successConsumer consumer for successful response
      */
-    public void getProfile(Consumer<String> successConsumer) {
-        getJson(successConsumer, "https://api.spotify.com/v1/me");
+    public void getProfile(Consumer<SpotifyProfile> successConsumer) {
+        getJson(successConsumer, SpotifyProfile.class, "https://api.spotify.com/v1/me");
     }
 
     /**
@@ -69,9 +94,10 @@ public class SpotifyApi {
      * @param limit number of artists to retrieve
      * @param timeRange time range for top artists
      */
-    public void getTopArtists(Consumer<String> successConsumer, int limit, TimeRange timeRange) {
+    public void getTopArtists(Consumer<TopArtists> successConsumer, int limit, TimeRange timeRange) {
         getJson(
                 successConsumer,
+                TopArtists.class,
                 "https://api.spotify.com/v1/me/top/artists?limit=" + limit + "&time_range=" + timeRange.getValue()
         );
     }
@@ -82,9 +108,10 @@ public class SpotifyApi {
      * @param limit number of tracks to retrieve
      * @param timeRange time range for top tracks
      */
-    public void getTopTracks(Consumer<String> successConsumer, int limit, TimeRange timeRange) {
+    public void getTopTracks(Consumer<TopTracks> successConsumer, int limit, TimeRange timeRange) {
         getJson(
                 successConsumer,
+                TopTracks.class,
                 "https://api.spotify.com/v1/me/top/tracks?limit=" + limit + "&time_range=" + timeRange.getValue()
         );
         // TODO: Extract soundbite
@@ -96,7 +123,7 @@ public class SpotifyApi {
      * @param successConsumer consumer for successful response
      * @param url url for API request
      */
-    private void getJson(Consumer<String> successConsumer, String url) {
+    private <T> void getJson(Consumer<T> successConsumer, Class<T> c, String url) {
         Request request = new Request.Builder()
                 .url(url)
                 .addHeader("Authorization", "Bearer " + accessToken)
@@ -115,8 +142,8 @@ public class SpotifyApi {
             public void onResponse(Call call, Response response) throws IOException {
                 try {
                     final JSONObject jsonObject = new JSONObject(response.body().string());
-                    // TODO: Convert JSON to object, not string
-                    successConsumer.accept(jsonObject.toString(3));
+                    T object = gson.fromJson(jsonObject.toString(), c);
+                    successConsumer.accept(object);
                 } catch (JSONException e) {
                     failureCallback.onFailure(e);
                 }
