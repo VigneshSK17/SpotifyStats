@@ -17,6 +17,7 @@ import com.t1r2340.spotifystats.helpers.SpotifyApi;
 import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 import com.t1r2340.spotifystats.models.api.TopArtists;
 import com.t1r2340.spotifystats.models.api.TopTracks;
+import com.t1r2340.spotifystats.models.api.TrackObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 
     // Initialize the buttons
 
-    Button profileBtn = (Button) findViewById(R.id.profile_btn);
+    //Button profileBtn = (Button) findViewById(R.id.profile_btn);
 
     // Set the click listeners for the buttons
 //
@@ -69,10 +70,11 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 //      getCode();
 //    });
 
-    profileBtn.setOnClickListener((v) -> {
-//      onGetUserProfileClicked();
-      getToken();
-    });
+//    profileBtn.setOnClickListener((v) -> {
+//      //onGetUserProfileClicked();
+//      getToken();
+//    });
+    getToken();
 
   }
 
@@ -85,6 +87,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   public void getToken() {
     final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
     AuthorizationClient.openLoginActivity(MainActivity.this, AUTH_TOKEN_REQUEST_CODE, request);
+
   }
 
   /**
@@ -116,6 +119,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
       spotifyApi = new SpotifyApi(this, mAccessToken, mOkHttpClient, mCall);
       onGetUserProfileClicked();
 
+
     }
   }
 
@@ -141,7 +145,13 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 
     spotifyApi.getTopTracks((TopTracks jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
+      TrackObject[] tracks = jsonObject.getItems();
+      tracks[3].getAlbum();
     }, 5, SpotifyApi.TimeRange.SHORT_TERM);
+
+    spotifyApi.getProfile((SpotifyProfile jsonObject) -> {
+      Log.d("JSON", jsonObject.toString());
+    });
 
   }
 
