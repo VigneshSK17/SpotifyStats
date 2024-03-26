@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
 
+import com.t1r2340.spotifystats.R;
+
 public class MainActivity extends AppCompatActivity {
   //comment
 
