@@ -45,4 +45,12 @@
     </string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="your_top_genres">Your Top Genres</string>
+    <string name="list_genre">
+      <ol>1) Item 1</ol>\n
+      <ol>2) Item 2</ol>\n
+      <ol>3) Item 3</ol>\n
+    </string>
+    <string name="top_artists_display">1. Artist 1\n2. Artist 2\n3. Artist 3\n4. Artist 4\n5. Artist 5</string>
+    <string name="top_genre_display">1. Genre 1\n2. Genre 2\n3. Genre 3\n4. Genre 4\n5. Genre 5</string>
 </resources>

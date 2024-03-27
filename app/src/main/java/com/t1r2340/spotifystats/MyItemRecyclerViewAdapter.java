@@ -3,12 +3,11 @@ package com.t1r2340.spotifystats;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.t1r2340.spotifystats.placeholder.PlaceholderContent.PlaceholderItem;
-import com.t1r2340.spotifystats.databinding.FragmentWrappedDetailsBinding;
+import com.t1r2340.spotifystats.databinding.FragmentPrevWrappedBinding;
 
 import java.util.List;
 
@@ -27,7 +26,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
 
-        return new ViewHolder(FragmentWrappedDetailsBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
+        return new ViewHolder(FragmentPrevWrappedBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false));
 
     }
 
@@ -48,7 +47,7 @@ public class MyItemRecyclerViewAdapter extends RecyclerView.Adapter<MyItemRecycl
         public final TextView mContentView;
         public PlaceholderItem mItem;
 
-        public ViewHolder(FragmentWrappedDetailsBinding binding) {
+        public ViewHolder(FragmentPrevWrappedBinding binding) {
             super(binding.getRoot());
             mIdView = binding.itemNumber;
             mContentView = binding.content;
