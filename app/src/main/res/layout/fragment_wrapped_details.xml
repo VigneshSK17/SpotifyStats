@@ -4,9 +4,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp"
-    android:background="#1ED760"
+    android:background="#824D74"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
+    <!-- Title for the screen -->
+    <TextView
+        android:id="@+id/screenTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="[Date] Wrapped"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#FDAF7B"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="16dp"
+        android:fontFamily="sans-serif"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/genreCardView"
@@ -14,37 +30,43 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
         app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="#FDAF7B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toBottomOf="@id/screenTitleTextView">
+
+        <!-- Image for genre -->
 
         <!-- Title for top genres -->
-
-        <!-- Ordered list for top genres -->
-
         <TextView
             android:id="@+id/genreTitleTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Top Genres"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#401F71"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="8dp"
-            android:gravity="right"
-            android:text="Top Genres"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+            android:gravity="start"
+            android:fontFamily="sans-serif"/>
 
+        <!-- Ordered list for top genres -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="98dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/top_genre_display"
             android:textSize="16sp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintTop_toBottomOf="@id/genreTitleTextView"/>
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@id/genreTitleTextView"
+            android:fontFamily="sans-serif"/>
 
     </androidx.cardview.widget.CardView>
 
@@ -52,53 +74,77 @@
         android:id="@+id/artistCardView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="#FDAF7B"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/genreCardView">
 
+        <!-- Image for artists -->
+
         <!-- Title for top artists -->
         <TextView
             android:id="@+id/artistTitleTextView"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Top Artists"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:textColor="#401F71"
             android:layout_marginStart="16dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="6dp"
             android:layout_marginBottom="8dp"
-            android:gravity="right"/>
+            android:gravity="start"
+            android:fontFamily="sans-serif"/>
 
         <!-- Ordered list for top artists -->
         <TextView
-            android:layout_width="wrap_content"
+            android:layout_width="98dp"
             android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginStart="72dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="30dp"
+            android:layout_marginBottom="16dp"
             android:text="@string/top_artists_display"
             android:textSize="16sp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginBottom="16dp"
-            app:layout_constraintTop_toBottomOf="@id/artistTitleTextView"/>
+            android:textColor="#FFFFFF"
+            app:layout_constraintTop_toBottomOf="@id/artistTitleTextView"
+            android:fontFamily="sans-serif"/>
 
     </androidx.cardview.widget.CardView>
+
+    <!-- Title for top songs -->
+    <TextView
+        android:id="@+id/topSongsTitleTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Your Top Songs"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:textDecoration="underline"
+        app:layout_constraintTop_toBottomOf="@+id/artistCardView"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/songRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:paddingTop="50"
+        android:paddingTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/artistCardView"
-        app:layout_constraintVertical_bias="1.0"
+        app:layout_constraintTop_toBottomOf="@+id/topSongsTitleTextView"
+        app:layout_constraintVertical_bias="0.0"
         tools:listitem="@layout/your_song_list_item_layout" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
 
