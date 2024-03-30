@@ -27,6 +27,7 @@ public class SpotifyProfile {
      */
     private ImageObject image;
 
+    public SpotifyProfile() {}
     /**
      * Parses Spotify profile JSON
      */

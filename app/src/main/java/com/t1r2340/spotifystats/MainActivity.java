@@ -13,16 +13,25 @@ import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.helpers.FailureCallback;
+import com.t1r2340.spotifystats.helpers.FirestoreHelper;
 import com.t1r2340.spotifystats.helpers.SpotifyApi;
 import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 import com.t1r2340.spotifystats.models.api.TopArtists;
 import com.t1r2340.spotifystats.models.api.TopTracks;
 import com.t1r2340.spotifystats.models.api.TrackObject;
+import com.t1r2340.spotifystats.models.api.Wrapped;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -45,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   private TextView tokenTextView, codeTextView, profileTextView;
 
   private SpotifyApi spotifyApi;
+  private FirestoreHelper firestore;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -117,7 +127,10 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
       //setTextAsync(mAccessToken,tokenTextView);
 
       spotifyApi = new SpotifyApi(this, mAccessToken, mOkHttpClient, mCall);
+      firestore = new FirestoreHelper();
       onGetUserProfileClicked();
+//      testFirestoreSave();
+      testFirestoreGet();
 
 
     }
@@ -138,15 +151,14 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 //      Log.d("JSON", jsonObject.toString());
 //    });
 
-    // TODO: Create class for top artists and test here
     spotifyApi.getTopArtists((TopArtists jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
     }, 5, SpotifyApi.TimeRange.LONG_TERM);
 
     spotifyApi.getTopTracks((TopTracks jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
-      TrackObject[] tracks = jsonObject.getItems();
-      tracks[3].getAlbum();
+      List<TrackObject> tracks = jsonObject.getItems();
+      tracks.get(3).getAlbum();
     }, 5, SpotifyApi.TimeRange.SHORT_TERM);
 
     spotifyApi.getProfile((SpotifyProfile jsonObject) -> {
@@ -195,6 +207,29 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
     }
   }
 
+  // TODO: Set firestore rules back to private
+  private void testFirestoreSave() {
+    spotifyApi.getProfile((SpotifyProfile profile) -> {
+      spotifyApi.getTopArtists((TopArtists artists) -> {
+        spotifyApi.getTopTracks((TopTracks tracks) -> {
+
+          Set<String> genres = artists.getItems().stream().flatMap(a -> a.getGenres().stream()).collect(Collectors.toSet());
+          Wrapped wrapped = new Wrapped(artists, tracks, new ArrayList<>(genres), Date.from(Instant.now()), "2MsvIukb7LTkA2d79eiWoo3ygTm1");
+          firestore.storeWrapped(wrapped)
+                  .addOnSuccessListener(a -> Log.d("FIRESTORE", "Stored wrapped"))
+                  .addOnFailureListener(a -> Log.d("FIRESTORE", "Failed to store wrapped" + a));
+
+        }, 10, SpotifyApi.TimeRange.MEDIUM_TERM);
+      }, 10, SpotifyApi.TimeRange.MEDIUM_TERM);
+    });
+  }
+
+  private void testFirestoreGet() {
+    firestore.getWrappeds("2MsvIukb7LTkA2d79eiWoo3ygTm1", ds -> {
+      Log.d("WRAPPED", ds.get(0).toString());
+      Log.d("WRAPPED", ds.get(1).toString());
+    });
+  }
 
   @Override
   public void onFailure(Exception e) {

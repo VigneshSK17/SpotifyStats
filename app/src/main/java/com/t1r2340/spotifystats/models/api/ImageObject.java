@@ -19,6 +19,7 @@ public class ImageObject {
      */
     private String url;
 
+    public ImageObject() {}
     /**
      * Creates an image object from JSON.
      */

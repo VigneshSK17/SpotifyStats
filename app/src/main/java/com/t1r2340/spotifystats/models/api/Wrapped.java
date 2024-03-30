@@ -72,4 +72,8 @@ public class Wrapped {
     public String getUserId() {
         return userId;
     }
+
+    public String toString() {
+        return "Top Artists: " + topArtists.toString() + "Top Tracks: " + topTracks.toString() + "Top Genres: " + topGenres.toString() + "Generated At: " + generatedAt.toString() + "User ID: " + userId;
+    }
 }

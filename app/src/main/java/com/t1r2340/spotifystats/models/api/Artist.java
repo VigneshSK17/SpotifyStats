@@ -10,6 +10,7 @@ public class Artist {
     /** The name of the artist */
     private String name;
 
+    public Artist() {}
     /**
      * Constructor for Artist
      */
