@@ -1,33 +1,27 @@
 package com.t1r2340.spotifystats;
 
-import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.helpers.FailureCallback;
 import com.t1r2340.spotifystats.helpers.SpotifyApi;
-import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 import com.t1r2340.spotifystats.models.api.TopArtists;
 import com.t1r2340.spotifystats.models.api.TopTracks;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-
 import okhttp3.Call;
-import okhttp3.Callback;
 import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
 public class MainActivity extends AppCompatActivity implements FailureCallback {
 
@@ -49,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    checkCurrentUser();
 
     // Initialize the views
     //tokenTextView = (TextView) findViewById(R.id.token_text_view);
@@ -74,7 +69,20 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
       getToken();
     });
 
+
   }
+  public void checkCurrentUser() {
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    if (user != null) {
+      Log.d("Firebase", "User Exists");
+      Log.d("Firebase", user.getDisplayName());
+    } else {
+      Log.d("Firebase", "User Does not Exist");
+      startActivity(new Intent(MainActivity.this, FireBaseActivity.class));
+
+    }
+  }
+
 
   /**
    * Get token from Spotify
