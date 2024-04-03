@@ -8,17 +8,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.firebase.ui.auth.AuthUI;
-import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
-import com.firebase.ui.auth.IdpResponse;
-import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.spotify.sdk.android.auth.AuthorizationClient;
@@ -27,18 +18,14 @@ import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.helpers.FailureCallback;
 import com.t1r2340.spotifystats.helpers.FirestoreHelper;
 import com.t1r2340.spotifystats.helpers.SpotifyApi;
+import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 import com.t1r2340.spotifystats.models.api.TopArtists;
 import com.t1r2340.spotifystats.models.api.TopTracks;
 import com.t1r2340.spotifystats.models.api.TrackObject;
 import com.t1r2340.spotifystats.models.api.Wrapped;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
 import java.time.Instant;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -63,20 +50,12 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 
   private SpotifyApi spotifyApi;
   private FirestoreHelper firestore;
-  private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
-          new FirebaseAuthUIActivityResultContract(),
-          new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
-            @Override
-            public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
-              onSignInResult(result);
-            }
-          }
-  );
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+    checkCurrentUser();
 
     // Initialize the views
     //tokenTextView = (TextView) findViewById(R.id.token_text_view);
@@ -101,39 +80,21 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 //      //onGetUserProfileClicked();
 //      getToken();
 //    });
-    getToken();
+
 
   }
-  public void createSignInIntent() {
-    List<AuthUI.IdpConfig> providers = Arrays.asList(
-            new AuthUI.IdpConfig.EmailBuilder().build());
-
-    Intent signInIntent = AuthUI.getInstance()
-            .createSignInIntentBuilder()
-            .setAvailableProviders(providers)
-            .build();
-    signInLauncher.launch(signInIntent);
-  }
-  private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
-    IdpResponse response = result.getIdpResponse();
-    if (result.getResultCode() == RESULT_OK) {
-      // Successfully signed in
-      FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-      getCode();
+  public void checkCurrentUser() {
+    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+    if (user != null) {
+      Log.d("Firebase", "User Exists");
+      Log.d("Firebase", user.getDisplayName());
+      getToken();
     } else {
-      Toast.makeText(this, "Sign In Failed!", Toast.LENGTH_SHORT).show();
+      Log.d("Firebase", "User Does not Exist");
+      startActivity(new Intent(MainActivity.this, FireBaseActivity.class));
+
     }
   }
-  public void signOut() {
-    AuthUI.getInstance()
-            .signOut(this)
-            .addOnCompleteListener(new OnCompleteListener<Void>() {
-              public void onComplete(@NonNull Task<Void> task) {
-                // ...
-              }
-            });
-  }
-
 
 
   /**
@@ -262,7 +223,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
         spotifyApi.getTopTracks((TopTracks tracks) -> {
 
           Set<String> genres = artists.getItems().stream().flatMap(a -> a.getGenres().stream()).collect(Collectors.toSet());
-          Wrapped wrapped = new Wrapped(artists, tracks, new ArrayList<>(genres), Date.from(Instant.now()), "2MsvIukb7LTkA2d79eiWoo3ygTm1");
+          Wrapped wrapped = new Wrapped(artists, tracks, new ArrayList<>(genres), Date.from(Instant.now()), profile.getId());
           firestore.storeWrapped(wrapped)
                   .addOnSuccessListener(a -> Log.d("FIRESTORE", "Stored wrapped"))
                   .addOnFailureListener(a -> Log.d("FIRESTORE", "Failed to store wrapped" + a));
@@ -273,9 +234,10 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   }
 
   private void testFirestoreGet() {
-    firestore.getWrappeds("2MsvIukb7LTkA2d79eiWoo3ygTm1", ds -> {
-      Log.d("WRAPPED", ds.get(0).toString());
-      Log.d("WRAPPED", ds.get(1).toString());
+    spotifyApi.getProfile((SpotifyProfile profile) -> {
+      firestore.getWrappeds(profile.getId(), ds -> {
+        Log.d("WRAPPED", ds.get(0).toString());
+      });
     });
   }
 
