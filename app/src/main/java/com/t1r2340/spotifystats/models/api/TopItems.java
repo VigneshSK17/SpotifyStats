@@ -13,6 +13,8 @@ public abstract class TopItems {
     /** Total number of items */
     private int total;
 
+    public TopItems() {}
+
     /**
      * Constructor for TopItems
      */

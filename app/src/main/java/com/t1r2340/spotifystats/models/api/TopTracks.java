@@ -1,5 +1,7 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.util.List;
+
 /**
  * Class holding top tracks information
 
@@ -7,12 +9,14 @@ package com.t1r2340.spotifystats.models.api;
 public class TopTracks extends TopItems {
 
     /** The list of tracks */
-    private TrackObject[] items;
+    private List<TrackObject> items;
+
+    public TopTracks() {}
 
     /**
      * Constructor for TopTracks
      */
-    public TopTracks(int limit, String next, int offset, int total, TrackObject[] items) {
+    public TopTracks(int limit, String next, int offset, int total, List<TrackObject> items) {
         super(limit, next, offset, total);
         this.items = items;
     }
@@ -21,7 +25,7 @@ public class TopTracks extends TopItems {
      * Gets the track items
      * @return the track items
      */
-    public TrackObject[] getItems() {
+    public List<TrackObject> getItems() {
         return items;
     }
 

@@ -1,6 +1,8 @@
 package com.t1r2340.spotifystats.models.api;
 
 
+import java.util.List;
+
 /**
  * Class holding album information
  */
@@ -11,15 +13,16 @@ public class Album {
     /** The type of the album */
     private String albumType;
     /** The images of the album */
-    private ImageObject[] images;
+    private List<ImageObject> images;
     /** The name of the album */
     private String name;
 
 
+    public Album() {}
     /**
      * Constructor for Album
      */
-    public Album(String id, String albumType, ImageObject[] images, String name) {
+    public Album(String id, String albumType, List<ImageObject> images, String name) {
         this.id = id;
         this.albumType = albumType;
         this.images = images;
@@ -46,7 +49,7 @@ public class Album {
      * Gets the images of the album
      * @return the images of the album
      */
-    public ImageObject[] getImages() {
+    public List<ImageObject> getImages() {
         return images;
     }
 

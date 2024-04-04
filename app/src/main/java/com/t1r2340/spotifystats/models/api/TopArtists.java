@@ -2,18 +2,22 @@ package com.t1r2340.spotifystats.models.api;
 
 import androidx.annotation.NonNull;
 
+import java.util.List;
+
 /**
  * Class holding user's top artists
  */
 public class TopArtists extends TopItems {
 
     /** The list of artists */
-    private ArtistObject[] items;
+    private List<ArtistObject> items;
+
+    public TopArtists() {}
 
     /**
      * Constructor for TopArtists
      */
-    public TopArtists(int limit, String next, int offset, int total, ArtistObject[] items) {
+    public TopArtists(int limit, String next, int offset, int total, List<ArtistObject> items) {
         super(limit, next, offset, total);
         this.items = items;
     }
@@ -22,7 +26,7 @@ public class TopArtists extends TopItems {
      * Gets the list of artists
      * @return the list of artists
      */
-    public ArtistObject[] getItems() {
+    public List<ArtistObject> getItems() {
         return items;
     }
 

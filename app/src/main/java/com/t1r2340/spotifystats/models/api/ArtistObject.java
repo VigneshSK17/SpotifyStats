@@ -1,19 +1,22 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.util.List;
+
 /**
  * Class holding more specific artist information
  */
 public class ArtistObject extends Artist {
 
     /** Genres of the artist */
-    private String[] genres;
+    private List<String> genres;
     /** Images of the artist */
-    private ImageObject[] images;
+    private List<ImageObject> images;
 
+    public ArtistObject() {}
     /**
      * Constructor for ArtistObject
      */
-    public ArtistObject(String id, String name, String[] genres, ImageObject[] images) {
+    public ArtistObject(String id, String name, List<String> genres, List<ImageObject> images) {
         super(id, name);
         this.genres = genres;
         this.images = images;
@@ -23,7 +26,7 @@ public class ArtistObject extends Artist {
      * Gets the genres of the artist
      * @return the genres of the artist
      */
-    public String[] getGenres() {
+    public List<String> getGenres() {
         return genres;
     }
 
@@ -31,7 +34,7 @@ public class ArtistObject extends Artist {
      * Gets the images of the artist
      * @return the images of the artist
      */
-    public ImageObject[] getImages() {
+    public List<ImageObject> getImages() {
         return images;
     }
 }
