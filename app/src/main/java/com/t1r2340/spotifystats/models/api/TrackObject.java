@@ -16,26 +16,23 @@ public class TrackObject {
     private int durationMs;
     /** Whether or not the track has explicit lyrics */
     private boolean explicit;
-    /** Whether or not the track is playable in the Spotify client */
-    private boolean isPlayable;
     /** The name of the track */
     private String name;
-    /** A URL to a 30 second preview (MP3) of the track */
-    private String previewUrl; // TODO: Use isPlayable to check if not null
+    /** The URI of the track, used for playback */
+    private String uri;
 
     public TrackObject() {}
     /**
      * Constructor for TrackObject
      */
-    public TrackObject(String id, Album album, List<ArtistObject> artists, int durationMs, boolean explicit, boolean isPlayable, String name, String previewUrl) {
+    public TrackObject(String id, Album album, List<ArtistObject> artists, int durationMs, boolean explicit, String name, String uri) {
         this.id = id;
         this.album = album;
         this.artists = artists;
         this.durationMs = durationMs;
         this.explicit = explicit;
-        this.isPlayable = isPlayable;
         this.name = name;
-        this.previewUrl = previewUrl;
+        this.uri = uri;
     }
 
     /**
@@ -79,14 +76,6 @@ public class TrackObject {
     }
 
     /**
-     * Gets whether or not the track is playable in the Spotify client
-     * @return whether or not the track is playable in the Spotify client
-     */
-    public boolean isPlayable() {
-        return isPlayable;
-    }
-
-    /**
      * Gets the name of the track
      * @return the name of the track
      */
@@ -95,10 +84,10 @@ public class TrackObject {
     }
 
     /**
-     * Gets a URL to a 30 second preview (MP3) of the track
-     * @return a URL to a 30 second preview (MP3) of the track
+     * Gets the URI of the track
+     * @return the URI of the track
      */
-    public String getPreviewUrl() {
-        return previewUrl;
+    public String getUri() {
+        return uri;
     }
 }

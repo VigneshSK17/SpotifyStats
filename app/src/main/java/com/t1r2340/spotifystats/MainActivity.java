@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -12,12 +11,16 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.spotify.android.appremote.api.ConnectionParams;
+import com.spotify.android.appremote.api.Connector;
+import com.spotify.android.appremote.api.SpotifyAppRemote;
 import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.helpers.FailureCallback;
 import com.t1r2340.spotifystats.helpers.FirestoreHelper;
-import com.t1r2340.spotifystats.helpers.SpotifyApi;
+import com.t1r2340.spotifystats.helpers.SpotifyApiHelper;
+import com.t1r2340.spotifystats.helpers.SpotifyAppRemoteHelper;
 import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 import com.t1r2340.spotifystats.models.api.TopArtists;
 import com.t1r2340.spotifystats.models.api.TopTracks;
@@ -36,11 +39,13 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity implements FailureCallback {
 
+  // TODO: Move auth logic to separate class
   public static final String CLIENT_ID = "1d7e65ad5ac447908a52e0b5de50ca92";
   public static final String REDIRECT_URI = "spotifystats://auth";
 
   public static final int AUTH_TOKEN_REQUEST_CODE = 0;
   public static final int AUTH_CODE_REQUEST_CODE = 1;
+
 
   private final OkHttpClient mOkHttpClient = new OkHttpClient();
   private String mAccessToken, mAccessCode;
@@ -48,7 +53,8 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 
   private TextView tokenTextView, codeTextView, profileTextView;
 
-  private SpotifyApi spotifyApi;
+  private SpotifyApiHelper spotifyApiHelper;
+  private SpotifyAppRemoteHelper spotifyAppRemoteHelper;
   private FirestoreHelper firestore;
 
   @Override
@@ -135,12 +141,14 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
       mAccessToken = response.getAccessToken();
       //setTextAsync(mAccessToken,tokenTextView);
 
-      spotifyApi = new SpotifyApi(this, mAccessToken, mOkHttpClient, mCall);
+      spotifyApiHelper = new SpotifyApiHelper(this, mAccessToken, mOkHttpClient, mCall);
       firestore = new FirestoreHelper();
       onGetUserProfileClicked();
 //      testFirestoreSave();
       testFirestoreGet();
 
+      connectAppRemote();
+//      testAppRemote();
 
     }
   }
@@ -160,17 +168,17 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 //      Log.d("JSON", jsonObject.toString());
 //    });
 
-    spotifyApi.getTopArtists((TopArtists jsonObject) -> {
+    spotifyApiHelper.getTopArtists((TopArtists jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
-    }, 5, SpotifyApi.TimeRange.LONG_TERM);
+    }, 5, SpotifyApiHelper.TimeRange.LONG_TERM);
 
-    spotifyApi.getTopTracks((TopTracks jsonObject) -> {
+    spotifyApiHelper.getTopTracks((TopTracks jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
       List<TrackObject> tracks = jsonObject.getItems();
       tracks.get(3).getAlbum();
-    }, 5, SpotifyApi.TimeRange.SHORT_TERM);
+    }, 5, SpotifyApiHelper.TimeRange.SHORT_TERM);
 
-    spotifyApi.getProfile((SpotifyProfile jsonObject) -> {
+    spotifyApiHelper.getProfile((SpotifyProfile jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
     });
 
@@ -218,9 +226,9 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 
   // TODO: Set firestore rules back to private
   private void testFirestoreSave() {
-    spotifyApi.getProfile((SpotifyProfile profile) -> {
-      spotifyApi.getTopArtists((TopArtists artists) -> {
-        spotifyApi.getTopTracks((TopTracks tracks) -> {
+    spotifyApiHelper.getProfile((SpotifyProfile profile) -> {
+      spotifyApiHelper.getTopArtists((TopArtists artists) -> {
+        spotifyApiHelper.getTopTracks((TopTracks tracks) -> {
 
           Set<String> genres = artists.getItems().stream().flatMap(a -> a.getGenres().stream()).collect(Collectors.toSet());
           Wrapped wrapped = new Wrapped(artists, tracks, new ArrayList<>(genres), Date.from(Instant.now()), profile.getId());
@@ -228,17 +236,27 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
                   .addOnSuccessListener(a -> Log.d("FIRESTORE", "Stored wrapped"))
                   .addOnFailureListener(a -> Log.d("FIRESTORE", "Failed to store wrapped" + a));
 
-        }, 10, SpotifyApi.TimeRange.MEDIUM_TERM);
-      }, 10, SpotifyApi.TimeRange.MEDIUM_TERM);
+        }, 10, SpotifyApiHelper.TimeRange.MEDIUM_TERM);
+      }, 10, SpotifyApiHelper.TimeRange.MEDIUM_TERM);
     });
   }
 
   private void testFirestoreGet() {
-    spotifyApi.getProfile((SpotifyProfile profile) -> {
+    spotifyApiHelper.getProfile((SpotifyProfile profile) -> {
       firestore.getWrappeds(profile.getId(), ds -> {
         Log.d("WRAPPED", ds.get(0).toString());
+        Log.d("WRAPPED", ds.get(0).getTopTracks().getItems().get(0).getUri());
       });
     });
+  }
+
+  private void connectAppRemote() {
+    spotifyAppRemoteHelper = new SpotifyAppRemoteHelper(CLIENT_ID, REDIRECT_URI, this);
+  }
+
+  // TODO: Clean this up, only use this when accessing music, make sure to disconnect when pause pressed
+  private void testAppRemote() {
+    spotifyAppRemoteHelper.connectAndRun("spotify:track:6FGrBYBdIAS2asaP54AnZo");
   }
 
   @Override
@@ -251,6 +269,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   @Override
   protected void onDestroy() {
     cancelCall();
+    spotifyAppRemoteHelper.disconnect();
     super.onDestroy();
   }
 }

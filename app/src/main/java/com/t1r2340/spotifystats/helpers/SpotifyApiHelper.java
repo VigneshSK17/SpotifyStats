@@ -1,9 +1,6 @@
 package com.t1r2340.spotifystats.helpers;
 
-import android.util.Log;
-
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 import com.t1r2340.spotifystats.models.api.TopArtists;
 import com.t1r2340.spotifystats.models.api.TopTracks;
@@ -12,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.function.Consumer;
 
 import okhttp3.Call;
@@ -28,7 +24,7 @@ import okhttp3.Response;
  * to allow fro easy use of the JSON object returned from the API without having to deal with
  * the async nature of the API call
  */
-public class SpotifyApi {
+public class SpotifyApiHelper {
 
     /** Access token for Spotify API */
     private String accessToken;
@@ -71,7 +67,7 @@ public class SpotifyApi {
      * @param okHttpClient HTTP client for API calls
      * @param mCall current API call
      */
-    public SpotifyApi(FailureCallback failureCallback, String accessToken, OkHttpClient okHttpClient, Call mCall) {
+    public SpotifyApiHelper(FailureCallback failureCallback, String accessToken, OkHttpClient okHttpClient, Call mCall) {
         this.failureCallback = failureCallback;
         this.accessToken = accessToken;
         this.okHttpClient = okHttpClient;
@@ -112,7 +108,7 @@ public class SpotifyApi {
         getJson(
                 successConsumer,
                 TopTracks.class,
-                "https://api.spotify.com/v1/me/top/tracks?limit=" + limit + "&time_range=" + timeRange.getValue()
+                "https://api.spotify.com/v1/me/top/tracks?limit=" + limit + "&time_range=" + timeRange.getValue() + "&market=US"
         );
         // TODO: Extract soundbite
     }

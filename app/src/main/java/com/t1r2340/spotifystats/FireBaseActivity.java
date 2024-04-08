@@ -49,7 +49,6 @@ public class FireBaseActivity extends AppCompatActivity {
         Intent signInIntent = AuthUI.getInstance()
                 .createSignInIntentBuilder()
                 .setAvailableProviders(providers)
-                .setIsSmartLockEnabled(false)
                 .build();
         signInLauncher.launch(signInIntent);
         Log.d("Firebase", "Sign in intent launched");

@@ -5,16 +5,20 @@
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:theme="@style/Theme.Material3.Dark"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="403dp"
+        android:layout_height="558dp"
+        tools:layout_editor_absoluteX="1dp"
+        tools:layout_editor_absoluteY="287dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
-
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="124dp"
+        android:layout_height="51dp"
+        android:text="Today's Wrapped"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="39dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>
