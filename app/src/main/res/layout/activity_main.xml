@@ -1,24 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:theme="@style/Theme.Material3.Dark"
+    android:orientation="vertical"
     tools:context=".MainActivity">
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:layout_width="403dp"
-        android:layout_height="558dp"
-        tools:layout_editor_absoluteX="1dp"
-        tools:layout_editor_absoluteY="287dp" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="124dp"
         android:layout_height="51dp"
-        android:text="Today's Wrapped"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="39dp" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        android:text="Today's Wrapped" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="403dp"
+        android:layout_height="558dp" />
+
+</LinearLayout>
