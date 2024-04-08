@@ -1,11 +1,13 @@
 package com.t1r2340.spotifystats.models.api;
 
 import com.google.firebase.firestore.ServerTimestamp;
+import com.t1r2340.spotifystats.helpers.SpotifyApiHelper;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class Wrapped {
+public class Wrapped implements Serializable {
 
   /** The top artists */
   private TopArtists topArtists;
@@ -21,6 +23,8 @@ public class Wrapped {
 
   /** The firebase user ID */
   private String userId;
+  /** The time range for the wrapped */
+  private SpotifyApiHelper.TimeRange timeRange;
 
   public Wrapped() {}
 
@@ -30,7 +34,8 @@ public class Wrapped {
       TopTracks topTracks,
       List<String> topGenres,
       Date generatedAt,
-      String userId) {
+      String userId,
+      SpotifyApiHelper.TimeRange timeRange) {
     this.topArtists = topArtists;
     this.topTracks = topTracks;
     this.topGenres = topGenres;
@@ -81,6 +86,15 @@ public class Wrapped {
    */
   public String getUserId() {
     return userId;
+  }
+
+  /**
+   * Gets the time range for the wrapped
+   *
+   * @return the time range for the wrapped
+   */
+  public SpotifyApiHelper.TimeRange getTimeRange() {
+    return timeRange;
   }
 
   public String toString() {

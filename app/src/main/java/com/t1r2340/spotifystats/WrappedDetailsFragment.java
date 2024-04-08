@@ -8,10 +8,13 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.t1r2340.spotifystats.databinding.FragmentWrappedDetailsBinding;
+import com.t1r2340.spotifystats.models.api.Wrapped;
 import com.t1r2340.spotifystats.placeholder.PlaceholderContent;
 
 /** A fragment representing a list of Items. */
@@ -22,47 +25,21 @@ public class WrappedDetailsFragment extends Fragment {
   // TODO: Customize parameters
   private int mColumnCount = 1;
 
-  /**
-   * Mandatory empty constructor for the fragment manager to instantiate the fragment (e.g. upon
-   * screen orientation changes).
-   */
-  public WrappedDetailsFragment() {}
-
-  // TODO: Customize parameter initialization
-  @SuppressWarnings("unused")
-  public static WrappedDetailsFragment newInstance(int columnCount) {
-    WrappedDetailsFragment fragment = new WrappedDetailsFragment();
-    Bundle args = new Bundle();
-    args.putInt(ARG_COLUMN_COUNT, columnCount);
-    fragment.setArguments(args);
-    return fragment;
-  }
-
-  @Override
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-
-    if (getArguments() != null) {
-      mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
-    }
-  }
+  private FragmentWrappedDetailsBinding binding;
+  private Wrapped wrapped;
 
   @Override
   public View onCreateView(
       LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-    View view = inflater.inflate(R.layout.fragment_wrapped_details_list, container, false);
 
-    // Set the adapter
-    if (view instanceof RecyclerView) {
-      Context context = view.getContext();
-      RecyclerView recyclerView = (RecyclerView) view;
-      if (mColumnCount <= 1) {
-        recyclerView.setLayoutManager(new LinearLayoutManager(context));
-      } else {
-        recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
-      }
-      recyclerView.setAdapter(new MyItemRecyclerViewAdapter(PlaceholderContent.ITEMS));
-    }
-    return view;
+    binding = FragmentWrappedDetailsBinding.inflate(inflater, container, false);
+
+    Bundle bundle = getArguments();
+    binding.screenTitleTextView.setText(bundle.getString("wrappedTitle"));
+    wrapped = (Wrapped) bundle.getSerializable("wrapped");
+
+    Log.d("WrappedDetailsFragment", "Wrapped: " + wrapped);
+
+    return binding.getRoot();
   }
 }

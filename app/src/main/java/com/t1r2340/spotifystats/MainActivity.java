@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
                               tracks,
                               new ArrayList<>(genres),
                               Date.from(Instant.now()),
-                              profile.getId());
+                              profile.getId(), SpotifyApiHelper.TimeRange.MEDIUM_TERM);
                       firestore
                           .storeWrapped(wrapped)
                           .addOnSuccessListener(a -> Log.d("FIRESTORE", "Stored wrapped"))

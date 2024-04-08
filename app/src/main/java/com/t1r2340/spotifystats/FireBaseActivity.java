@@ -90,8 +90,14 @@ public class FireBaseActivity extends AppCompatActivity implements FailureCallba
     // Check which request code is present (if any)
     if (0 == requestCode) {
       mAccessToken = response.getAccessToken();
-
       Log.d("Firebase", "Spotify token received: " + mAccessToken);
+
+      HomePageFragment fragment = new HomePageFragment();
+      Bundle bundle = new Bundle();
+      bundle.putString("accessToken", mAccessToken);
+      fragment.setArguments(bundle);
+      getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container_view, fragment).commit();
+
     }
   }
 

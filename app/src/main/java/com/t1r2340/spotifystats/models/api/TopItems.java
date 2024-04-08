@@ -1,7 +1,9 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.io.Serializable;
+
 /** Abstract class to hold top artists/tracks information */
-public abstract class TopItems {
+public abstract class TopItems implements Serializable {
   /** Number of items returned */
   private int limit;
 

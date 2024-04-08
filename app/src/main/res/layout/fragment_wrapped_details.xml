@@ -55,6 +55,7 @@
 
         <!-- Ordered list for top genres -->
         <TextView
+            android:id="@+id/genreListTextView"
             android:layout_width="98dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
@@ -101,6 +102,7 @@
 
         <!-- Ordered list for top artists -->
         <TextView
+            android:id="@+id/artistListTextView"
             android:layout_width="98dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
