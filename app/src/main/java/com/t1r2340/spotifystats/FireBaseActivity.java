@@ -3,6 +3,7 @@ package com.t1r2340.spotifystats;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -17,11 +18,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.t1r2340.spotifystats.databinding.ActivityFireBaseBinding;
 
 import java.util.Arrays;
 import java.util.List;
 
 public class FireBaseActivity extends AppCompatActivity {
+
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
             new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
@@ -37,6 +40,7 @@ public class FireBaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fire_base);
         createSignInIntent();
+
     }
 
     public void createSignInIntent() {
@@ -57,9 +61,9 @@ public class FireBaseActivity extends AppCompatActivity {
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
-            startActivity(new Intent(FireBaseActivity.this, MainActivity.class));
+            // TODO: Do stuff with fragment
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-            // ...
+            Toast.makeText(this, "Welcome " + user.getDisplayName() , Toast.LENGTH_SHORT).show();
         } else {
             Log.d("Firebase", "Login failed");
         }
