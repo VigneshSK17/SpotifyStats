@@ -24,6 +24,8 @@ import com.spotify.sdk.android.auth.AuthorizationClient;
 import com.spotify.sdk.android.auth.AuthorizationRequest;
 import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.databinding.ActivitySettingsBinding;
+import com.t1r2340.spotifystats.dialog.ChangePasswordDialogFragment;
+import com.t1r2340.spotifystats.dialog.ChangeUsernameDialogFragment;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -53,8 +55,22 @@ public class SettingsActivity extends AppCompatActivity {
      */
     private void setupButtons() {
         setupExitButton();
-        setupDeleteButton();
+        setupChangeUsernameButton();
+        setupChangePasswordButton();
         setupSignOutButton();
+        setupDeleteButton();
+    }
+
+    private void setupChangeUsernameButton() {
+        binding.btnChangeUsername.setOnClickListener(v -> {
+            new ChangeUsernameDialogFragment().show(getSupportFragmentManager(), "ChangeUsernameDialogFragment");
+        });
+    }
+
+    private void setupChangePasswordButton() {
+        binding.btnChangePassword.setOnClickListener(v -> {
+            new ChangePasswordDialogFragment().show(getSupportFragmentManager(), "ChangePasswordDialogFragment");
+        });
     }
 
     private void setupSignOutButton() {
