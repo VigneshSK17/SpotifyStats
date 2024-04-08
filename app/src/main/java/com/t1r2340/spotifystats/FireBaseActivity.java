@@ -43,6 +43,14 @@ public class FireBaseActivity extends AppCompatActivity {
 
     }
 
+    protected void onStart() {
+        super.onStart();
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        if (currentUser == null) {
+            createSignInIntent();
+        }
+    }
+
     public void createSignInIntent() {
         // [START auth_fui_create_intent]
         // Choose authentication providers

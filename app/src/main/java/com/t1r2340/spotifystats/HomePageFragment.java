@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.t1r2340.spotifystats.databinding.FragmentHomePageBinding;
 
 public class HomePageFragment extends Fragment {
