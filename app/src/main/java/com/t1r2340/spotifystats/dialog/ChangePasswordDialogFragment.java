@@ -3,9 +3,7 @@ package com.t1r2340.spotifystats.dialog;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -13,38 +11,38 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.t1r2340.spotifystats.databinding.DialogChangePasswordBinding;
-import com.t1r2340.spotifystats.databinding.DialogChangeUsernameBinding;
 
 public class ChangePasswordDialogFragment extends DialogFragment {
 
-    private DialogChangePasswordBinding binding;
-    private FirebaseUser user;
+  private DialogChangePasswordBinding binding;
+  private FirebaseUser user;
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) {
-            dismiss();
-        }
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
-        LayoutInflater inflater = requireActivity().getLayoutInflater();
-        binding = DialogChangePasswordBinding.inflate(inflater);
-
-        binding.etNewPassword.setHint("New Password");
-
-        builder.setView(binding.getRoot())
-                .setPositiveButton("Save", (dialog, id) -> {
-                    String newPassword = binding.etNewPassword.getText().toString();
-                    user.updatePassword(newPassword);
-                    dismiss();
-                })
-                .setNegativeButton("Cancel", (dialog, id) -> dismiss());
-
-        return builder.create();
+  @NonNull
+  @Override
+  public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
+    user = FirebaseAuth.getInstance().getCurrentUser();
+    if (user == null) {
+      dismiss();
     }
 
+    AlertDialog.Builder builder = new AlertDialog.Builder(requireContext());
+    LayoutInflater inflater = requireActivity().getLayoutInflater();
+    binding = DialogChangePasswordBinding.inflate(inflater);
+
+    binding.etNewPassword.setHint("New Password");
+
+    builder
+        .setView(binding.getRoot())
+        .setPositiveButton(
+            "Save",
+            (dialog, id) -> {
+              String newPassword = binding.etNewPassword.getText().toString();
+              user.updatePassword(newPassword);
+              dismiss();
+            })
+        .setNegativeButton("Cancel", (dialog, id) -> dismiss());
+
+    return builder.create();
+  }
 }

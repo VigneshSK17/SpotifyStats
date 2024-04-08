@@ -1,55 +1,50 @@
 package com.t1r2340.spotifystats.models.api;
 
-import org.json.JSONObject;
 
-/**
- * Represents an image object.
- */
+/** Represents an image object. */
 public class ImageObject {
-    /**
-     * The height of the image in pixels.
-     */
-    private int height;
-    /**
-     * The width of the image in pixels.
-     */
-    private int width;
-    /**
-     * The URL of the image.
-     */
-    private String url;
+  /** The height of the image in pixels. */
+  private int height;
 
-    public ImageObject() {}
-    /**
-     * Creates an image object from JSON.
-     */
-    public ImageObject(int height, int width, String url) {
-        this.height = height;
-        this.width = width;
-        this.url = url;
-    }
+  /** The width of the image in pixels. */
+  private int width;
 
-    /**
-     * Gets the height of the image.
-     * @return the height of the image
-     */
-    public int getHeight() {
-        return height;
-    }
+  /** The URL of the image. */
+  private String url;
 
-    /**
-     * Gets the width of the image.
-     * @return the width of the image
-     */
-    public int getWidth() {
-        return width;
-    }
+  public ImageObject() {}
 
-    /**
-     * Gets the URL of the image.
-     * @return the URL of the image
-     */
-    public String getUrl() {
-        return url;
-    }
+  /** Creates an image object from JSON. */
+  public ImageObject(int height, int width, String url) {
+    this.height = height;
+    this.width = width;
+    this.url = url;
+  }
+
+  /**
+   * Gets the height of the image.
+   *
+   * @return the height of the image
+   */
+  public int getHeight() {
+    return height;
+  }
+
+  /**
+   * Gets the width of the image.
+   *
+   * @return the width of the image
+   */
+  public int getWidth() {
+    return width;
+  }
+
+  /**
+   * Gets the URL of the image.
+   *
+   * @return the URL of the image
+   */
+  public String getUrl() {
+    return url;
+  }
 }

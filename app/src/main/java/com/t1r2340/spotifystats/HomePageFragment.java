@@ -11,46 +11,40 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
-import com.google.firebase.auth.FirebaseAuth;
 import com.t1r2340.spotifystats.databinding.FragmentHomePageBinding;
 
 public class HomePageFragment extends Fragment {
 
-    private FragmentHomePageBinding binding;
+  private FragmentHomePageBinding binding;
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+  @Override
+  public View onCreateView(
+      LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-        binding = FragmentHomePageBinding.inflate(inflater, container, false);
+    binding = FragmentHomePageBinding.inflate(inflater, container, false);
 
-        setupButtons();
+    setupButtons();
 
-        return binding.getRoot();
-    }
+    return binding.getRoot();
+  }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+  public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    super.onViewCreated(view, savedInstanceState);
+  }
 
-    }
+  private void setupButtons() {
 
-    private void setupButtons() {
+    setupSettingsButton();
+  }
 
-        setupSettingsButton();
+  private void setupSettingsButton() {
 
-    }
+    ImageButton settingsButton = binding.btnSettings;
 
-    private void setupSettingsButton() {
-
-        ImageButton settingsButton = binding.btnSettings;
-
-        settingsButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), SettingsActivity.class);
-            startActivity(intent);
+    settingsButton.setOnClickListener(
+        v -> {
+          Intent intent = new Intent(getActivity(), SettingsActivity.class);
+          startActivity(intent);
         });
-
-
-    }
-
-
+  }
 }
