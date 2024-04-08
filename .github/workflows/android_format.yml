@@ -3,6 +3,11 @@ name: Format
 on:
   push:
     branches: [ main ]
+  on:
+    workflow_run:
+      workflows: ["Build"]
+      types:
+        - completed
 
 
 
