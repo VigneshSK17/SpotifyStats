@@ -36,16 +36,10 @@ import okhttp3.Call;
 public class FireBaseActivity extends AppCompatActivity implements FailureCallback {
 
     private String mAccessToken;
-    private Call mCall;
 
     private final ActivityResultLauncher<Intent> signInLauncher = registerForActivityResult(
             new FirebaseAuthUIActivityResultContract(),
-            new ActivityResultCallback<FirebaseAuthUIAuthenticationResult>() {
-                @Override
-                public void onActivityResult(FirebaseAuthUIAuthenticationResult result) {
-                    onSignInResult(result);
-                }
-            }
+            result -> onSignInResult(result)
     );
 
     @Override
@@ -78,7 +72,6 @@ public class FireBaseActivity extends AppCompatActivity implements FailureCallba
     private void onSignInResult(FirebaseAuthUIAuthenticationResult result) {
         IdpResponse response = result.getIdpResponse();
         if (result.getResultCode() == RESULT_OK) {
-            // TODO: Do stuff with fragment
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
             Toast.makeText(this, "Welcome " + user.getDisplayName() , Toast.LENGTH_SHORT).show();
             getToken();
@@ -153,15 +146,18 @@ public class FireBaseActivity extends AppCompatActivity implements FailureCallba
                 Toast.LENGTH_SHORT).show();
     }
 
-    private void cancelCall() {
-        if (mCall != null) {
-            mCall.cancel();
-        }
-    }
-    @Override
-    protected void onDestroy() {
-        cancelCall();
+    // TODO: INclude in wrapped generation
+//    private void cancelCall() {
+//        if (mCall != null) {
+//            mCall.cancel();
+//        }
+//    }
+
+    // TODO: include in wrapped generation
+//    @Override
+//    protected void onDestroy() {
+//        cancelCall();
 //        spotifyAppRemoteHelper.disconnect(); // TODO: Add this for app remote use cases
-        super.onDestroy();
-    }
+//        super.onDestroy();
+//    }
 }

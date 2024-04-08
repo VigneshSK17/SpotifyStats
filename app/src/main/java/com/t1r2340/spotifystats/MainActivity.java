@@ -39,13 +39,8 @@ import okhttp3.OkHttpClient;
 
 public class MainActivity extends AppCompatActivity implements FailureCallback {
 
-  // TODO: Move auth logic to separate class
-  public final String CLIENT_ID = getString(R.string.client_id);
-  public final String REDIRECT_URI = getString(R.string.redirect_uri);
-
-  public static final int AUTH_TOKEN_REQUEST_CODE = 0;
-  public static final int AUTH_CODE_REQUEST_CODE = 1;
-
+  private final String CLIENT_ID = getString(R.string.client_id);
+  private final String REDIRECT_URI  = getString(R.string.redirect_uri);
 
   private final OkHttpClient mOkHttpClient = new OkHttpClient();
   private String mAccessToken, mAccessCode;
@@ -61,89 +56,6 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
-    checkCurrentUser();
-
-    // Initialize the views
-    //tokenTextView = (TextView) findViewById(R.id.token_text_view);
-
-    //profileTextView = (TextView) findViewById(R.id.response_text_view);
-
-    // Initialize the buttons
-
-    //Button profileBtn = (Button) findViewById(R.id.profile_btn);
-
-    // Set the click listeners for the buttons
-//
-//    tokenBtn.setOnClickListener((v) -> {
-//      getToken();
-//    });
-//
-//    codeBtn.setOnClickListener((v) -> {
-//      getCode();
-//    });
-
-//    profileBtn.setOnClickListener((v) -> {
-//      //onGetUserProfileClicked();
-//      getToken();
-//    });
-
-
-  }
-  public void checkCurrentUser() {
-    FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-    if (user != null) {
-      Log.d("Firebase", "User Exists");
-      Log.d("Firebase", user.getDisplayName());
-      getToken();
-    } else {
-      Log.d("Firebase", "User Does not Exist");
-      startActivity(new Intent(MainActivity.this, FireBaseActivity.class));
-
-    }
-  }
-
-  public void getToken() {
-    final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
-    AuthorizationClient.openLoginActivity(MainActivity.this, AUTH_TOKEN_REQUEST_CODE, request);
-
-  }
-
-  /**
-   * Get code from Spotify
-   * This method will open the Spotify login activity and get the code
-   * What is code?
-   * https://developer.spotify.com/documentation/general/guides/authorization-guide/
-   */
-  public void getCode() {
-    final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.CODE);
-    AuthorizationClient.openLoginActivity(MainActivity.this, AUTH_CODE_REQUEST_CODE, request);
-  }
-
-
-  /**
-   * When the app leaves this activity to momentarily get a token/code, this function
-   * fetches the result of that external activity to get the response from Spotify
-   */
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-    super.onActivityResult(requestCode, resultCode, data);
-    final AuthorizationResponse response = AuthorizationClient.getResponse(resultCode, data);
-
-    // Check which request code is present (if any)
-    if (AUTH_TOKEN_REQUEST_CODE == requestCode) {
-      mAccessToken = response.getAccessToken();
-      //setTextAsync(mAccessToken,tokenTextView);
-
-      spotifyApiHelper = new SpotifyApiHelper(this, mAccessToken, mOkHttpClient, mCall);
-      firestore = new FirestoreHelper();
-      onGetUserProfileClicked();
-//      testFirestoreSave();
-      testFirestoreGet();
-
-      connectAppRemote();
-//      testAppRemote();
-
-    }
   }
 
   /**
@@ -155,11 +67,6 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
       Toast.makeText(this, "You need to get an access token first!", Toast.LENGTH_SHORT).show();
       return;
     }
-
-    // Create a request to get the user profile
-//    spotifyApi.getProfile((SpotifyProfile jsonObject) -> {
-//      Log.d("JSON", jsonObject.toString());
-//    });
 
     spotifyApiHelper.getTopArtists((TopArtists jsonObject) -> {
       Log.d("JSON", jsonObject.toString());
@@ -175,16 +82,6 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
       Log.d("JSON", jsonObject.toString());
     });
 
-  }
-
-
-  /**
-   * Gets the redirect Uri for Spotify
-   *
-   * @return redirect Uri object
-   */
-  private Uri getRedirectUri() {
-    return Uri.parse(REDIRECT_URI);
   }
 
   private void cancelCall() {
