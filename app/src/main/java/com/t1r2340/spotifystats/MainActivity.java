@@ -40,8 +40,8 @@ import okhttp3.OkHttpClient;
 public class MainActivity extends AppCompatActivity implements FailureCallback {
 
   // TODO: Move auth logic to separate class
-  public static final String CLIENT_ID = "1d7e65ad5ac447908a52e0b5de50ca92";
-  public static final String REDIRECT_URI = "spotifystats://auth";
+  public final String CLIENT_ID = getString(R.string.client_id);
+  public final String REDIRECT_URI = getString(R.string.redirect_uri);
 
   public static final int AUTH_TOKEN_REQUEST_CODE = 0;
   public static final int AUTH_CODE_REQUEST_CODE = 1;
@@ -102,13 +102,6 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
     }
   }
 
-
-  /**
-   * Get token from Spotify
-   * This method will open the Spotify login activity and get the token
-   * What is token?
-   * https://developer.spotify.com/documentation/general/guides/authorization-guide/
-   */
   public void getToken() {
     final AuthorizationRequest request = getAuthenticationRequest(AuthorizationResponse.Type.TOKEN);
     AuthorizationClient.openLoginActivity(MainActivity.this, AUTH_TOKEN_REQUEST_CODE, request);
@@ -184,30 +177,6 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 
   }
 
-  /**
-   * Creates a UI thread to update a TextView in the background
-   * Reduces UI latency and makes the system perform more consistently
-   *
-   * @param text the text to set
-   * @param textView TextView object to update
-   */
-  private void setTextAsync(final String text, TextView textView) {
-    runOnUiThread(() -> textView.setText(text));
-  }
-
-  /**
-   * Get authentication request
-   *
-   * @param type the type of the request
-   * @return the authentication request
-   */
-  private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
-    return new AuthorizationRequest.Builder(CLIENT_ID, type, getRedirectUri().toString())
-            .setShowDialog(false)
-            .setScopes(new String[] { "user-read-email", "user-follow-read", "user-top-read" }) // <--- Change the scope of your requested token here
-            .setCampaign("your-campaign-token")
-            .build();
-  }
 
   /**
    * Gets the redirect Uri for Spotify
@@ -257,6 +226,22 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
   // TODO: Clean this up, only use this when accessing music, make sure to disconnect when pause pressed
   private void testAppRemote() {
     spotifyAppRemoteHelper.connectAndRun("spotify:track:6FGrBYBdIAS2asaP54AnZo");
+  }
+
+  /**
+   * Get authentication request
+   *
+   * @param type the type of the request
+   * @return the authentication request
+   */
+  private AuthorizationRequest getAuthenticationRequest(AuthorizationResponse.Type type) {
+    String clientId = getString(R.string.client_id);
+    String redirectUri = getString(R.string.redirect_uri);
+    return new AuthorizationRequest.Builder(clientId, type, Uri.parse(redirectUri).toString())
+            .setShowDialog(false)
+            .setScopes(new String[] { "user-read-email", "user-follow-read", "user-top-read" }) // <--- Change the scope of your requested token here
+            .setCampaign("your-campaign-token")
+            .build();
   }
 
   @Override

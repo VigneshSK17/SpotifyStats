@@ -1,6 +1,7 @@
 package com.t1r2340.spotifystats;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -19,6 +20,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.spotify.sdk.android.auth.AuthorizationClient;
+import com.spotify.sdk.android.auth.AuthorizationRequest;
+import com.spotify.sdk.android.auth.AuthorizationResponse;
 import com.t1r2340.spotifystats.databinding.ActivitySettingsBinding;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -50,24 +54,45 @@ public class SettingsActivity extends AppCompatActivity {
     private void setupButtons() {
         setupExitButton();
         setupDeleteButton();
+        setupSignOutButton();
+    }
+
+    private void setupSignOutButton() {
+        binding.btnLogout.setOnClickListener(v -> {
+            signOutAccount();
+            signOutSpotifyAccount();
+        });
     }
 
     /**
      * Sets up the delete account button
      */
     private void setupDeleteButton() {
-        binding.btnDeleteAccount.setOnClickListener(v -> deleteAccount());
+        binding.btnDeleteAccount.setOnClickListener(v -> {
+            deleteAccount();
+            signOutSpotifyAccount();
+        });
     }
 
     /**
      * Sets up the exit button to finish the activity
      */
     private void setupExitButton() {
-        MaterialToolbar toolbar = binding.toolbar;
-        toolbar.setNavigationOnClickListener(v -> {
-            Intent intent = new Intent(SettingsActivity.this, FireBaseActivity.class);
-            startActivity(intent);
-        });
+        binding.toolbar.setNavigationOnClickListener(v -> finish());
+    }
+
+    private void signOutAccount() {
+        AuthUI.getInstance()
+                .signOut(this)
+                .addOnCompleteListener(task -> {
+                    finish();
+                });
+    }
+
+    private void signOutSpotifyAccount() {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.spotify.com/logout/"));
+        Toast.makeText(SettingsActivity.this, "Sign Out of the Spotify App", Toast.LENGTH_SHORT).show();
+        startActivity(intent);
     }
 
     /**
