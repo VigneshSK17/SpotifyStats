@@ -44,11 +44,11 @@ public class SpotifyApiHelper {
   /** Time range for top artists and tracks */
   public enum TimeRange {
     /** 1 month */
-    SHORT_TERM("SHORT_TERM"),
+    SHORT_TERM("short_term"),
     /** 6 months */
-    MEDIUM_TERM("MEDIUM_TERM"),
+    MEDIUM_TERM("medium_term"),
     /** Several years */
-    LONG_TERM("LONG_TERM");
+    LONG_TERM("long_term");
 
     private final String value;
 
@@ -121,7 +121,6 @@ public class SpotifyApiHelper {
             + "&time_range="
             + timeRange.getValue()
             + "&market=US");
-    // TODO: Extract soundbite
   }
 
   /**

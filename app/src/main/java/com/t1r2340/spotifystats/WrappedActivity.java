@@ -11,6 +11,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.t1r2340.spotifystats.helpers.FailureCallback;
 import com.t1r2340.spotifystats.helpers.FirestoreHelper;
 import com.t1r2340.spotifystats.helpers.SpotifyApiHelper;
@@ -33,7 +35,6 @@ public class WrappedActivity extends AppCompatActivity implements FailureCallbac
     private String accessToken;
     private SpotifyApiHelper spotifyApi;
     private FirestoreHelper firestore;
-    private SpotifyApiHelper.TimeRange timeRange;
     private final OkHttpClient mOkHttpClient = new OkHttpClient();
     private Call mCall;
 
@@ -42,18 +43,19 @@ public class WrappedActivity extends AppCompatActivity implements FailureCallbac
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wrapped);
 
-        //TODO: homepagefragment should have intent with access token and pick time range dropdown
         Intent intent = getIntent();
         accessToken = intent.getStringExtra("accessToken");
-        timeRange = SpotifyApiHelper.TimeRange.valueOf(intent.getStringExtra("timeRange"));
+        SpotifyApiHelper.TimeRange timeRange = SpotifyApiHelper.TimeRange.valueOf(intent.getStringExtra("timeRange"));
         spotifyApi = new SpotifyApiHelper(this, accessToken, mOkHttpClient, mCall);
         firestore = new FirestoreHelper();
 
-        genWrapped();
+
+
+        genWrapped(timeRange);
 
     }
 
-    private void genWrapped() {
+    private void genWrapped(SpotifyApiHelper.TimeRange timeRange) {
         spotifyApi.getProfile(
                 (SpotifyProfile profile) -> {
                     spotifyApi.getTopArtists(
@@ -64,13 +66,18 @@ public class WrappedActivity extends AppCompatActivity implements FailureCallbac
                                                     artists.getItems().stream()
                                                             .flatMap(a -> a.getGenres().stream())
                                                             .collect(Collectors.toSet());
+
+                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+                                            Log.d("WRAPPED_ACTIVITY", timeRange.getValue());
+
                                             Wrapped wrapped =
                                                     new Wrapped(
                                                             artists,
                                                             tracks,
                                                             new ArrayList<>(genres),
                                                             Date.from(Instant.now()),
-                                                            profile.getId(), timeRange);
+                                                            user.getUid(), timeRange);
 
 
                                             firestore

@@ -41,6 +41,7 @@ public class Wrapped implements Serializable {
     this.topGenres = topGenres;
     this.generatedAt = generatedAt;
     this.userId = userId;
+    this.timeRange = timeRange;
   }
 
   /**

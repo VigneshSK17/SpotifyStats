@@ -101,17 +101,6 @@ public class FireBaseActivity extends AppCompatActivity implements FailureCallba
     }
   }
 
-  // TODO: Implement into wrapped generation
-  /**
-   * Creates a UI thread to update a TextView in the background Reduces UI latency and makes the
-   * system perform more consistently
-   *
-   * @param text the text to set
-   * @param textView TextView object to update
-   */
-  private void setTextAsync(final String text, TextView textView) {
-    runOnUiThread(() -> textView.setText(text));
-  }
 
   /**
    * Get authentication request
@@ -138,18 +127,4 @@ public class FireBaseActivity extends AppCompatActivity implements FailureCallba
     Toast.makeText(FireBaseActivity.this, "Failed to fetch data", Toast.LENGTH_SHORT).show();
   }
 
-  // TODO: INclude in wrapped generation
-  //    private void cancelCall() {
-  //        if (mCall != null) {
-  //            mCall.cancel();
-  //        }
-  //    }
-
-  // TODO: include in wrapped generation
-  //    @Override
-  //    protected void onDestroy() {
-  //        cancelCall();
-  //        spotifyAppRemoteHelper.disconnect(); // TODO: Add this for app remote use cases
-  //        super.onDestroy();
-  //    }
 }

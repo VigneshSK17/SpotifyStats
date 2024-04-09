@@ -20,8 +20,6 @@ public class FirestoreHelper {
     this.db = FirebaseFirestore.getInstance();
   }
 
-  // TODO: Parse from TextViews to create Wrapped object
-  // TODO: create addOnSuccessListener and addOnFailureListener which displays a toast message
   /**
    * Stores a wrapped object in firestore
    *
@@ -50,14 +48,13 @@ public class FirestoreHelper {
                     task.getResult().getDocuments().stream()
                         .map(snapshot -> snapshot.toObject(Wrapped.class))
                         .collect(Collectors.toList());
-                Log.d("WRAPPED", wrappeds.get(0).getUserId());
+                Log.d("WRAPPED", "" + task.getResult().getDocuments().size());
 
                 consumer.accept(wrappeds);
               }
             });
   }
 
-  // TODO: create addOnSuccessListener and addOnFailureListener which displays a toast message
   /**
    * Deletes a wrapped object from firestore
    *
