@@ -4,17 +4,30 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:padding="0dp"
-    android:background="#F4F9F9"
-    android:layout_marginBottom="0dp"
-    android:layout_marginTop="0dp">
+    android:layout_marginBottom="4dp"
+    android:layout_marginTop="4dp"
+    android:layout_marginHorizontal="4dp">
 
-    <Button
-        android:id="@+id/wrappedButton"
-        android:layout_width="378dp"
-        android:layout_height="48dp"
-        android:backgroundTint="#A4EBF3"
-        android:text="Your Wrapped for [Date]"
-        android:textColor="@color/black"
-        android:textSize="20sp"
-        app:cornerRadius="10dp" />
+    <androidx.cardview.widget.CardView
+        android:id="@+id/wrappedCardView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="15dp"
+        android:layout_marginVertical="4dp"
+        app:cardBackgroundColor="#A4EBF3">
+
+        <TextView
+            android:id="@+id/wrappedTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your Wrapped for [Date]"
+            android:textColor="@color/black"
+            android:textAlignment="center"
+            android:layout_marginHorizontal="8dp"
+            android:textSize="20sp" />
+
+    </androidx.cardview.widget.CardView>
+
+
+
 </LinearLayout>

@@ -42,19 +42,27 @@ public class HomePageFragment extends Fragment {
 
     setupSettingsButton();
     setupCreateWrappedButton();
+    setupPreviousWrappedButton();
   }
 
   private void setupCreateWrappedButton() {
 
     Button createWrappedButton = binding.btnCreateWrapped;
 
-    // TODO: Create dropdown dialog for time range
-
     createWrappedButton.setOnClickListener(
         v -> {
           TimeRangeDialog dialog = new TimeRangeDialog(accessToken);
           dialog.show(getParentFragmentManager(), "TimeRangeDialog");
         });
+  }
+
+  private void setupPreviousWrappedButton() {
+    Button previousWrappedButton = binding.btnViewWrappeds;
+
+    previousWrappedButton.setOnClickListener(v -> {
+        Intent intent = new Intent(getActivity(), PrevWrappedsActivity.class);
+        startActivity(intent);
+    });
   }
 
   private void setupSettingsButton() {
