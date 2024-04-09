@@ -1,9 +1,10 @@
 package com.t1r2340.spotifystats.models.api;
 
 
+import java.io.Serializable;
 
 /** Represents a Spotify user's profile as needed */
-public class SpotifyProfile {
+public class SpotifyProfile implements Serializable {
   /** The user's Spotify ID. */
   private String id;
 

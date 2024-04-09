@@ -1,9 +1,10 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.io.Serializable;
 import java.util.List;
 
 /** Class holding track information */
-public class TrackObject {
+public class TrackObject implements Serializable {
   /** The Spotify ID for the track */
   private String id;
 

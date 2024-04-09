@@ -1,8 +1,10 @@
 package com.t1r2340.spotifystats.models.api;
 
 
+import java.io.Serializable;
+
 /** Represents an image object. */
-public class ImageObject {
+public class ImageObject implements Serializable {
   /** The height of the image in pixels. */
   private int height;
 

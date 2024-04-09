@@ -1,7 +1,9 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.io.Serializable;
+
 /** Class holding artist information */
-public class Artist {
+public class Artist implements Serializable {
 
   /** The Spotify ID for the artist */
   private String id;

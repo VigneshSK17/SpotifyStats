@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.t1r2340.spotifystats.databinding.FragmentHomePageBinding;
+import com.t1r2340.spotifystats.dialog.TimeRangeDialog;
 
 public class HomePageFragment extends Fragment {
 
@@ -47,12 +48,12 @@ public class HomePageFragment extends Fragment {
 
     Button createWrappedButton = binding.btnCreateWrapped;
 
+    // TODO: Create dropdown dialog for time range
+
     createWrappedButton.setOnClickListener(
         v -> {
-          Intent intent = new Intent(getActivity(), WrappedActivity.class);
-          intent.putExtra("accessToken", accessToken);
-          intent.putExtra("timeRange", "SHORT_TERM"); //TODO: get time range from dropdown
-          startActivity(intent);
+          TimeRangeDialog dialog = new TimeRangeDialog(accessToken);
+          dialog.show(getParentFragmentManager(), "TimeRangeDialog");
         });
   }
 
@@ -66,4 +67,6 @@ public class HomePageFragment extends Fragment {
           startActivity(intent);
         });
   }
+
+
 }

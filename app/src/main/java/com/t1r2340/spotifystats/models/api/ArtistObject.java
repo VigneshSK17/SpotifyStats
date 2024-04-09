@@ -1,9 +1,10 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.io.Serializable;
 import java.util.List;
 
 /** Class holding more specific artist information */
-public class ArtistObject extends Artist {
+public class ArtistObject extends Artist implements Serializable {
 
   /** Genres of the artist */
   private List<String> genres;

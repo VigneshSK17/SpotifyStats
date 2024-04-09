@@ -1,9 +1,10 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.io.Serializable;
 import java.util.List;
 
 /** Class holding album information */
-public class Album {
+public class Album implements Serializable {
 
   /** The Spotify ID for the album */
   private String id;

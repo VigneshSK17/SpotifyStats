@@ -1,10 +1,11 @@
 package com.t1r2340.spotifystats.models.api;
 
 
+import java.io.Serializable;
 import java.util.List;
 
 /** Class holding user's top artists */
-public class TopArtists extends TopItems {
+public class TopArtists extends TopItems implements Serializable {
 
   /** The list of artists */
   private List<ArtistObject> items;

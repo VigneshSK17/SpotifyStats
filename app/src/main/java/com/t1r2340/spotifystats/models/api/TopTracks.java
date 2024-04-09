@@ -1,9 +1,10 @@
 package com.t1r2340.spotifystats.models.api;
 
+import java.io.Serializable;
 import java.util.List;
 
 /** Class holding top tracks information */
-public class TopTracks extends TopItems {
+public class TopTracks extends TopItems implements Serializable {
 
   /** The list of tracks */
   private List<TrackObject> items;

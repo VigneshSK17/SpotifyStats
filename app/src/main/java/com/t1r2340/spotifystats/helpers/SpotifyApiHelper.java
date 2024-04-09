@@ -44,11 +44,11 @@ public class SpotifyApiHelper {
   /** Time range for top artists and tracks */
   public enum TimeRange {
     /** 1 month */
-    SHORT_TERM("short_term"),
+    SHORT_TERM("SHORT_TERM"),
     /** 6 months */
-    MEDIUM_TERM("medium_term"),
+    MEDIUM_TERM("MEDIUM_TERM"),
     /** Several years */
-    LONG_TERM("long_term");
+    LONG_TERM("LONG_TERM");
 
     private final String value;
 
