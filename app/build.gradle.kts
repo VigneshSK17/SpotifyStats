@@ -63,5 +63,6 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.9.3")
 
     implementation("com.google.code.gson:gson:2.8.6")
+    implementation("com.squareup.picasso:picasso:2.8")
 
 }

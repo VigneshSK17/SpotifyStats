@@ -21,9 +21,11 @@ public class SpotifyAppRemoteHelper {
     this.clientId = clientId;
     this.redirectUri = redirectUri;
     this.context = context;
+
+    connect();
   }
 
-  public void connectAndRun(String uri) {
+  private void connect() {
     ConnectionParams connectionParams =
         new ConnectionParams.Builder(clientId)
             .setRedirectUri(redirectUri)
@@ -38,7 +40,6 @@ public class SpotifyAppRemoteHelper {
           public void onConnected(SpotifyAppRemote sar) {
             spotifyAppRemote = sar;
             Log.d("APP_REMOTE", "Connected to App Remote");
-            spotifyAppRemote.getPlayerApi().play(uri);
           }
 
           @Override
@@ -46,6 +47,14 @@ public class SpotifyAppRemoteHelper {
             Log.e("APP_REMOTE", throwable.getMessage(), throwable);
           }
         });
+  }
+
+  public void play(String uri) {
+    spotifyAppRemote.getPlayerApi().play(uri);
+  }
+
+  public void pause() {
+    spotifyAppRemote.getPlayerApi().pause();
   }
 
   // TODO: Add this to the button that play/pauses, add some max time limit?

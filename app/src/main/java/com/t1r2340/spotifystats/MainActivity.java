@@ -137,9 +137,9 @@ public class MainActivity extends AppCompatActivity implements FailureCallback {
 
   // TODO: Clean this up, only use this when accessing music, make sure to disconnect when pause
   // pressed
-  private void testAppRemote() {
-    spotifyAppRemoteHelper.connectAndRun("spotify:track:6FGrBYBdIAS2asaP54AnZo");
-  }
+//  private void testAppRemote() {
+//    spotifyAppRemoteHelper.connectAndRun("spotify:track:6FGrBYBdIAS2asaP54AnZo");
+//  }
 
   /**
    * Get authentication request
