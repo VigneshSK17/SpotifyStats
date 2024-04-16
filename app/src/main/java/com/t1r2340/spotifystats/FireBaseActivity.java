@@ -52,7 +52,7 @@ public class FireBaseActivity extends AppCompatActivity implements FailureCallba
     List<AuthUI.IdpConfig> providers = Arrays.asList(new AuthUI.IdpConfig.EmailBuilder().build());
 
     Intent signInIntent =
-        AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).build();
+        AuthUI.getInstance().createSignInIntentBuilder().setAvailableProviders(providers).setLogo(R.drawable.unwrappd_white).build();
     signInLauncher.launch(signInIntent);
     Log.d("Firebase", "Sign in intent launched");
   }
