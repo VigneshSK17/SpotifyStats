@@ -27,7 +27,6 @@ public class SettingsActivity extends AppCompatActivity {
 
     binding = ActivitySettingsBinding.inflate(getLayoutInflater());
     setContentView(binding.getRoot());
-
     setSupportActionBar(binding.toolbar);
 
     user = FirebaseAuth.getInstance().getCurrentUser();
