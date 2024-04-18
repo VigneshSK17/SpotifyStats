@@ -24,8 +24,8 @@
             android:name=".WrappedActivity"
             android:exported="false" />
         <activity
-            android:name=".FireBaseActivity"
-            android:exported="true">
+            android:name=".HomePageActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
