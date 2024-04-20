@@ -3,116 +3,76 @@ package com.t1r2340.spotifystats;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
+import androidx.viewpager2.widget.ViewPager2;
 
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.t1r2340.spotifystats.helpers.FailureCallback;
-import com.t1r2340.spotifystats.helpers.FirestoreHelper;
-import com.t1r2340.spotifystats.helpers.SpotifyApiHelper;
-import com.t1r2340.spotifystats.models.api.SpotifyProfile;
-import com.t1r2340.spotifystats.models.api.TopArtists;
-import com.t1r2340.spotifystats.models.api.TopTracks;
 import com.t1r2340.spotifystats.models.api.Wrapped;
 
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Set;
-import java.util.stream.Collectors;
+public class WrappedActivity extends FragmentActivity {
 
-import okhttp3.Call;
-import okhttp3.OkHttpClient;
+    private Wrapped wrapped;
+    private String title;
+    private boolean isPremium;
 
-public class WrappedActivity extends AppCompatActivity implements FailureCallback {
-
-    private String accessToken;
-    private SpotifyApiHelper spotifyApi;
-    private FirestoreHelper firestore;
-    private final OkHttpClient mOkHttpClient = new OkHttpClient();
-    private Call mCall;
+    private ViewPager2 viewPager;
+    private WrappedPagerAdapter pagerAdapter;
+    private final int NUM_PAGES = 4;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_wrapped);
 
         Intent intent = getIntent();
-        accessToken = intent.getStringExtra("accessToken");
-        SpotifyApiHelper.TimeRange timeRange = SpotifyApiHelper.TimeRange.valueOf(intent.getStringExtra("timeRange"));
-        spotifyApi = new SpotifyApiHelper(this, accessToken, mOkHttpClient, mCall);
-        firestore = new FirestoreHelper();
+        wrapped = (Wrapped) intent.getSerializableExtra("wrapped");
+        title = intent.getStringExtra("wrappedTitle");
+        isPremium = intent.getBooleanExtra("isPremium", false);
 
-
-
-        genWrapped(timeRange);
+        viewPager = findViewById(R.id.viewPager);
+        pagerAdapter = new WrappedPagerAdapter(this);
+        viewPager.setAdapter(pagerAdapter);
 
     }
 
-    private void genWrapped(SpotifyApiHelper.TimeRange timeRange) {
-        spotifyApi.getProfile(
-                (SpotifyProfile profile) -> {
-                    spotifyApi.getTopArtists(
-                            (TopArtists artists) -> {
-                                spotifyApi.getTopTracks(
-                                        (TopTracks tracks) -> {
-                                            Set<String> genres =
-                                                    artists.getItems().stream()
-                                                            .flatMap(a -> a.getGenres().stream())
-                                                            .collect(Collectors.toSet());
+    private class WrappedPagerAdapter extends FragmentStateAdapter {
+        public WrappedPagerAdapter(FragmentActivity fa) {
+            super(fa);
+        }
 
-                                            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        @Override
+        public int getItemCount() {
+            return NUM_PAGES;
+        }
 
-                                            Log.d("WRAPPED_ACTIVITY", timeRange.getValue());
+        // TODO: correspond for each page
+        @Override
+        public Fragment createFragment(int position) {
+            Log.d("WRAPPED_ACTIVITY", "Position " + position);
 
-                                            Wrapped wrapped =
-                                                    new Wrapped(
-                                                            artists,
-                                                            tracks,
-                                                            new ArrayList<>(genres),
-                                                            Date.from(Instant.now()),
-                                                            user.getUid(), timeRange);
+            Bundle bundle = new Bundle();
+            bundle.putString("wrappedTitle", title);
+            bundle.putSerializable("wrapped", wrapped);
+            bundle.putBoolean("isPremium", isPremium);
 
+            Fragment fragment;
 
-                                            firestore
-                                                    .storeWrapped(wrapped)
-                                                    .addOnSuccessListener(a -> Log.d("FIRESTORE", "Stored wrapped"))
-                                                    .addOnFailureListener(
-                                                            a -> Log.d("FIRESTORE", "Failed to store wrapped" + a));
+            if (position == 0) {
+                fragment = new ArtistsDetailsFragment();
+            } else if (position == 1) {
+                fragment = new TracksDetailsFragment();
+            } else if (position == 2) {
+                fragment = new GenreDetailsFragment();
+            } else {
+                fragment = new WrappedDetailsFragment();
+            }
 
-                                            WrappedDetailsFragment fragment = new WrappedDetailsFragment();
-                                            Bundle bundle = new Bundle();
-                                            bundle.putString("wrappedTitle", "Today's Wrapped");
-                                            bundle.putSerializable("wrapped", wrapped);
-                                            fragment.setArguments(bundle);
-                                            getSupportFragmentManager()
-                                                    .beginTransaction()
-                                                    .replace(R.id.fragment_container_view, fragment)
-                                                    .commit();
+            fragment.setArguments(bundle);
+            return fragment;
 
-
-                                        },
-                                        10,
-                                        timeRange);
-                            },
-                            10,
-                            timeRange);
-                });
-    }
-
-    @Override
-    public void onFailure(Exception e) {
-        Log.d("HTTP", "Failed to fetch data: " + e);
-        Toast.makeText(
-                        WrappedActivity.this,
-                        "Failed to fetch data, watch Logcat for more details",
-                        Toast.LENGTH_SHORT)
-                .show();
+        }
     }
 }

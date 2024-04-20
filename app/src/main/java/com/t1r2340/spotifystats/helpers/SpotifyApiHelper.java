@@ -1,15 +1,32 @@
 package com.t1r2340.spotifystats.helpers;
 
+import android.util.Log;
+import android.util.Pair;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.gson.Gson;
 import com.t1r2340.spotifystats.models.api.SpotifyProfile;
 import com.t1r2340.spotifystats.models.api.TopArtists;
 import com.t1r2340.spotifystats.models.api.TopTracks;
+import com.t1r2340.spotifystats.models.api.Wrapped;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -124,6 +141,23 @@ public class SpotifyApiHelper {
   }
 
   /**
+   * Generates a wrapped object
+   */
+  public void genWrapped(int trackLimit, int artistLimit, int genreLimit, TimeRange timeRange, Consumer<Pair<Wrapped, Boolean>> successConsumer) {
+
+    getProfile(profile -> getTopArtists(artists -> getTopTracks(tracks -> {
+      FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+      List<String> genres = getGenres(artists, genreLimit);
+      Wrapped wrapped = new Wrapped(artists, tracks, new ArrayList<>(genres), Date.from(Instant.now()), user.getUid(), timeRange);
+
+      Log.d("WRAPPED_ACTIVITY", "Premium: " + profile.isPremium());
+
+      successConsumer.accept(new Pair<>(wrapped, profile.isPremium()));
+    }, trackLimit, timeRange), artistLimit, timeRange));
+
+  }
+
+  /**
    * Creates request for API data and retrieves JSON
    *
    * @param successConsumer consumer for successful response
@@ -135,6 +169,7 @@ public class SpotifyApiHelper {
 
     cancelCall();
     call = okHttpClient.newCall(request);
+
 
     okHttpClient
         .newCall(request)
@@ -163,5 +198,19 @@ public class SpotifyApiHelper {
     if (call != null) {
       call.cancel();
     }
+  }
+
+  private List<String> getGenres(TopArtists artists, int count) {
+    List<String> genres =
+        artists.getItems().stream()
+            .flatMap(a -> a.getGenres().stream())
+            .collect(Collectors.toList());
+
+    return genres.stream().collect(Collectors.groupingBy(i ->i, Collectors.counting()))
+            .entrySet().stream()
+            .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+            .map(Map.Entry::getKey)
+            .limit(count)
+            .collect(Collectors.toList());
   }
 }

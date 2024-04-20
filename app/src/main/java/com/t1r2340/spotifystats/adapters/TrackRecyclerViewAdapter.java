@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,18 +26,18 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter<TrackRecycler
     private List<TrackObject> tracks;
     private SpotifyAppRemoteHelper appRemoteHelper;
     private boolean isPlaying;
+    private int color;
+    private boolean isPremium;
+    private boolean isWrappedDetails;
 
-    /**
-     * Constructor for TrackRecyclerViewAdapter
-     * @param context the context of the adapter
-     * @param tracks the list of tracks to display
-     * @param appRemoteHelper the SpotifyAppRemoteHelper to use
-     */
-    public TrackRecyclerViewAdapter(Context context, List<TrackObject> tracks, SpotifyAppRemoteHelper appRemoteHelper) {
+    public TrackRecyclerViewAdapter(Context context, List<TrackObject> tracks, SpotifyAppRemoteHelper appRemoteHelper, int color, boolean isPremium, boolean isWrappedDetails) {
         this.context = context;
         this.tracks = tracks;
         this.appRemoteHelper = appRemoteHelper;
+        this.color = color;
         isPlaying = false;
+        this.isPremium = isPremium;
+        this.isWrappedDetails = isWrappedDetails;
     }
 
     @NonNull
@@ -58,6 +59,8 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter<TrackRecycler
     public void onBindViewHolder(@NonNull TrackViewHolder holder, int position) {
         TrackObject track = tracks.get(position);
 
+        setColor(holder);
+
         ImageObject trackImage = track.getAlbum().getImages().get(0);
         if (trackImage != null) {
             Picasso.get()
@@ -66,30 +69,43 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter<TrackRecycler
                     .into(holder.trackImage);
         }
 
-        holder.trackTitle.setText(track.getName());
+        if (isWrappedDetails) {
+            holder.trackTitle.setText(track.getName());
+        } else {
+            String title = (position + 2) + ". " + track.getName();
+            holder.trackTitle.setText(title);
+        }
         holder.artistName.setText(track.getArtists().get(0).getName());
 
         holder.card.setOnClickListener(l -> {
-            if (!isPlaying) {
-                playTrack(track);
-                isPlaying = true;
+            if (!isPremium) {
+                Toast.makeText(context, "You need Spotify Premium to play songs", Toast.LENGTH_SHORT).show();
             } else {
-                pauseTrack();
-                isPlaying = false;
+                if (!isPlaying) {
+                    playTrack(track);
+                    isPlaying = true;
+                } else {
+                    pauseTrack();
+                    isPlaying = false;
+                }
             }
         });
 
     }
 
-    public void playTrack(TrackObject track) {
+    private void setColor(@NonNull TrackRecyclerViewAdapter.TrackViewHolder holder) {
+        holder.card.setBackgroundColor(context.getColor(color));
+    }
+
+    private void playTrack(TrackObject track) {
         appRemoteHelper.play(track.getUri());
     }
 
-    public void pauseTrack() {
+    private void pauseTrack() {
         appRemoteHelper.pause();
     }
 
-    public static class TrackViewHolder extends RecyclerView.ViewHolder {
+    protected static class TrackViewHolder extends RecyclerView.ViewHolder {
         private LinearLayout card;
         private ImageView trackImage;
         private TextView trackTitle, artistName;
@@ -97,10 +113,10 @@ public class TrackRecyclerViewAdapter extends RecyclerView.Adapter<TrackRecycler
         public TrackViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.card = itemView.findViewById(R.id.track_layout);
-            this.trackImage = card.findViewById(R.id.song_image);
-            this.trackTitle = card.findViewById(R.id.song_title);
-            this.artistName = card.findViewById(R.id.artist_name);
+            this.card = itemView.findViewById(R.id.card_layout);
+            this.trackImage = card.findViewById(R.id.card_image);
+            this.trackTitle = card.findViewById(R.id.card_title);
+            this.artistName = card.findViewById(R.id.card_artist_name);
         }
     }
 

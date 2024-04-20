@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.t1r2340.spotifystats.PrevWrappedActivity;
 import com.t1r2340.spotifystats.R;
+import com.t1r2340.spotifystats.WrappedActivity;
 import com.t1r2340.spotifystats.helpers.SpotifyApiHelper;
 import com.t1r2340.spotifystats.models.api.Wrapped;
 
@@ -24,16 +25,19 @@ import java.util.Locale;
 public class WrappedRecyclerViewAdapter extends RecyclerView.Adapter<WrappedRecyclerViewAdapter.WrappedViewHolder> {
 
     private Context context;
-    public List<Wrapped> wrappeds;
+    private List<Wrapped> wrappeds;
+    private boolean isPremium;
 
     /**
      * Constructor for WrappedRecyclerViewAdapter
      * @param context the context of the adapter
      * @param wrappeds the list of wrappeds to display
+     * @param isPremium whether the user is premium or not
      */
-    public WrappedRecyclerViewAdapter(Context context, List<Wrapped> wrappeds) {
+    public WrappedRecyclerViewAdapter(Context context, List<Wrapped> wrappeds, boolean isPremium) {
         this.context = context;
         this.wrappeds = wrappeds;
+        this.isPremium = isPremium;
         Log.d("WRAPPED_RECYCLER_VIEW", "" + this.wrappeds.size());
     }
 
@@ -63,17 +67,10 @@ public class WrappedRecyclerViewAdapter extends RecyclerView.Adapter<WrappedRecy
         Wrapped wrapped = wrappeds.get(position);
         Log.d("WRAPPED_RECYCLER_VIEW", wrapped.toString());
 
+        setCardColor(holder, wrapped.getColor());
+
         StringBuilder title = new StringBuilder();
-        SpotifyApiHelper.TimeRange timeRange = wrapped.getTimeRange();
-        Log.d("WRAPPED_RECYCLER_VIEW", "Time Range: " + timeRange);
-        if (timeRange == SpotifyApiHelper.TimeRange.SHORT_TERM) {
-            title.append("Short Term");
-        } else if (timeRange == SpotifyApiHelper.TimeRange.MEDIUM_TERM) {
-            title.append("Medium Term");
-        } else if (timeRange == SpotifyApiHelper.TimeRange.LONG_TERM) {
-            title.append("Long Term");
-        }
-        title.append(" on ");
+        title.append("Your Wrapped for ");
         title.append(DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.US).format(wrapped.getGeneratedAt()));
 
         holder.wrappedTextView.setText(title.toString());
@@ -82,6 +79,7 @@ public class WrappedRecyclerViewAdapter extends RecyclerView.Adapter<WrappedRecy
             Intent intent = new Intent(context, PrevWrappedActivity.class);
             intent.putExtra("wrappedTitle", title.toString());
             intent.putExtra("wrapped", wrapped);
+            intent.putExtra("isPremium", isPremium);
             context.startActivity(intent);
         });
     }
@@ -90,6 +88,10 @@ public class WrappedRecyclerViewAdapter extends RecyclerView.Adapter<WrappedRecy
         this.wrappeds = wrappeds;
         Log.d("WRAPPED_RECYCLER_VIEW_SET", "" + this.wrappeds.size());
         notifyDataSetChanged();
+    }
+
+    private void setCardColor(@NonNull WrappedViewHolder holder, int color) {
+        holder.card.setCardBackgroundColor(context.getColor(color));
     }
 
     public static class WrappedViewHolder extends RecyclerView.ViewHolder {

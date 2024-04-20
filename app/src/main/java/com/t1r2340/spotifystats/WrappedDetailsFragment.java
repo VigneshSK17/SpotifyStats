@@ -12,9 +12,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.t1r2340.spotifystats.adapters.HorizArtistRecyclerViewAdapter;
 import com.t1r2340.spotifystats.adapters.TrackRecyclerViewAdapter;
 import com.t1r2340.spotifystats.databinding.FragmentWrappedDetailsBinding;
 import com.t1r2340.spotifystats.helpers.SpotifyAppRemoteHelper;
+import com.t1r2340.spotifystats.models.api.ArtistObject;
 import com.t1r2340.spotifystats.models.api.TrackObject;
 import com.t1r2340.spotifystats.models.api.Wrapped;
 
@@ -25,13 +27,16 @@ public class WrappedDetailsFragment extends Fragment {
 
   private Wrapped wrapped;
   List<TrackObject> tracks;
+  List<ArtistObject> artists;
   private SpotifyAppRemoteHelper appRemoteHelper;
 
 
   private FragmentWrappedDetailsBinding binding;
-  public TrackRecyclerViewAdapter adapter;
+  private TrackRecyclerViewAdapter tracksAdapter;
+  private HorizArtistRecyclerViewAdapter artistsAdapter;
 
-
+  private int color;
+  private boolean isPremium;
 
 
   @Override
@@ -43,12 +48,18 @@ public class WrappedDetailsFragment extends Fragment {
     Bundle bundle = getArguments();
     binding.screenTitleTextView.setText(bundle.getString("wrappedTitle"));
     wrapped = (Wrapped) bundle.getSerializable("wrapped");
+    isPremium = bundle.getBoolean("isPremium");
+
+    color = wrapped.getColor();
     Log.d("WrappedDetailsFragment", "Wrapped: " + wrapped);
+    Log.d("WrappedDetailsFragment", "isPremium: " + isPremium);
 
     tracks = wrapped.getTopTracks().getItems();
+    artists = wrapped.getTopArtists().getItems();
 
-    loadNumberedLists(true);
-    loadNumberedLists(false);
+    setColor();
+    loadGenres();
+    setArtistRecyclerView();
 
     appRemoteHelper = new SpotifyAppRemoteHelper(
             getString(R.string.client_id),
@@ -56,27 +67,41 @@ public class WrappedDetailsFragment extends Fragment {
             getContext()
     );
 
-    setRecyclerView();
+    setTrackRecyclerView();
 
     return binding.getRoot();
   }
 
-  public void loadNumberedLists(boolean isGenres) {
-    TextView tv = isGenres ? binding.genreListTextView : binding.artistListTextView;
+  private void loadGenres() {
+    TextView tv = binding.genreListTextView;
 
     StringBuilder list = new StringBuilder();
-    for (int i = 0; i < 5; i++) {
-      list.append(i + 1).append(". ").append(isGenres ? wrapped.getTopGenres().get(i) : wrapped.getTopArtists().getItems().get(i).getName()).append("\n");
+    int count = Math.min(5, wrapped.getTopGenres().size());
+    for (int i = 0; i < count; i++) {
+      list.append(i + 1).append(". ").append(wrapped.getTopGenres().get(i)).append("\n");
     }
     tv.setText(list.toString());
   }
 
-  private void setRecyclerView() {
+  private void setArtistRecyclerView() {
+    RecyclerView recyclerView = binding.artistRecyclerView;
+
+    artistsAdapter = new HorizArtistRecyclerViewAdapter(artists);
+    recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.HORIZONTAL, false));
+    recyclerView.setAdapter(artistsAdapter);
+  }
+
+  private void setTrackRecyclerView() {
     RecyclerView recyclerView = binding.trackRecyclerView;
 
-    adapter = new TrackRecyclerViewAdapter(getContext(), tracks, appRemoteHelper);
+    tracksAdapter = new TrackRecyclerViewAdapter(getContext(), tracks, appRemoteHelper, color, isPremium, true);
     recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-    recyclerView.setAdapter(adapter);
+    recyclerView.setAdapter(tracksAdapter);
+  }
+
+  private void setColor() {
+    binding.genreCardView.setCardBackgroundColor(getContext().getColor(color));
+    binding.artistCardView.setCardBackgroundColor(getContext().getColor(color));
   }
 
   @Override

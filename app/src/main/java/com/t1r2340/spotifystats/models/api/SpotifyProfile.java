@@ -16,15 +16,18 @@ public class SpotifyProfile implements Serializable {
 
   /** The user's profile image. */
   private ImageObject image;
+  /** The user's product type (premium, free, open). */
+  private String product;
 
   public SpotifyProfile() {}
 
   /** Parses Spotify profile JSON */
-  public SpotifyProfile(String id, String displayName, String email, ImageObject image) {
+  public SpotifyProfile(String id, String displayName, String email, ImageObject image, String product) {
     this.id = id;
     this.displayName = displayName;
     this.email = email;
     this.image = image;
+    this.product = product;
   }
 
   /**
@@ -61,6 +64,15 @@ public class SpotifyProfile implements Serializable {
    */
   public ImageObject getImage() {
     return image;
+  }
+
+  /**
+   * Gets if user product type is premium or not
+   *
+   * @return true if user is premium, false otherwise
+   */
+  public boolean isPremium() {
+    return product.equals("premium");
   }
 
   /**

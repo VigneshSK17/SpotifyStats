@@ -55,7 +55,7 @@ public class AuthHelper {
                 .setShowDialog(true)
                 .setScopes(
                         new String[] {
-                                "user-read-email", "user-follow-read", "user-top-read"
+                                "user-read-email", "user-follow-read", "user-top-read", "user-read-private"
                         }) // <--- Change the scope of your requested token here
                 .setCampaign("your-campaign-token")
                 .build();

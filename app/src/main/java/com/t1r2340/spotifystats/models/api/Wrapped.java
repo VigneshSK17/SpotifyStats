@@ -1,6 +1,7 @@
 package com.t1r2340.spotifystats.models.api;
 
 import com.google.firebase.firestore.ServerTimestamp;
+import com.t1r2340.spotifystats.R;
 import com.t1r2340.spotifystats.helpers.SpotifyApiHelper;
 
 import java.io.Serializable;
@@ -96,6 +97,22 @@ public class Wrapped implements Serializable {
    */
   public SpotifyApiHelper.TimeRange getTimeRange() {
     return timeRange;
+  }
+
+  /**
+   * Gets the color for the theme based on the time range
+   *
+   * @return the color for the theme
+   */
+  public int getColor() {
+    switch (timeRange) {
+        case SHORT_TERM:
+            return R.color.short_term;
+        case LONG_TERM:
+            return R.color.long_term;
+        default:
+            return R.color.primary;
+    }
   }
 
   public String toString() {

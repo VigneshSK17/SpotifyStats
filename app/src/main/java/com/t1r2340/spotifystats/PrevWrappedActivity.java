@@ -19,13 +19,9 @@ public class PrevWrappedActivity extends AppCompatActivity {
         setContentView(R.layout.activity_prev_wrapped);
 
         Intent intent = getIntent();
-        String wrappedTitle = intent.getStringExtra("wrappedTitle");
-        Wrapped wrapped = (Wrapped) intent.getSerializableExtra("wrapped");
+        Bundle bundle = intent.getExtras();
 
         WrappedDetailsFragment fragment = new WrappedDetailsFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("wrappedTitle", wrappedTitle);
-        bundle.putSerializable("wrapped", wrapped);
         fragment.setArguments(bundle);
         getSupportFragmentManager()
                 .beginTransaction()

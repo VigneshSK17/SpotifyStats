@@ -14,8 +14,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SpotifyStats"
         tools:targetApi="31">
-        <activity
-            android:name=".PrevWrappedActivity"
+        <activity android:name=".PrevWrappedActivity"
             android:exported="false" />
         <activity
             android:name=".PrevWrappedsActivity"

@@ -102,6 +102,9 @@ public class HomePageActivity extends AppCompatActivity {
     prevWrappedButton.setOnClickListener(
         v -> {
           // TODO: Make PrevWrappedFragment an activity
+          Intent intent = new Intent(this, PrevWrappedsActivity.class);
+          intent.putExtra("accessToken", accessToken);
+          startActivity(intent);
         }
     );
   }
