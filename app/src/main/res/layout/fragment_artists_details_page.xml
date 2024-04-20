@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    tools:context=".ArtistsDetailsFragment">
+
+    <!-- TextView for the artist title -->
+    <TextView
+        android:id="@+id/artistDetailsTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Top Artists"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:layout_marginVertical="16dp"
+        android:fontFamily="sans-serif"
+        android:layout_gravity="center|top"/>
+
+
+    <!-- Image for genre -->
+    <ImageView
+        android:id="@+id/topArtistImage"
+        android:layout_width="144dp"
+        android:layout_height="144dp"
+        android:scaleType="centerCrop"
+        android:layout_gravity="center"
+        android:src="@drawable/baseline_library_music_24" />
+
+    <!-- Title for top genres -->
+    <TextView
+        android:id="@+id/topArtistTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="1. [Artist Name]"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:fontFamily="sans-serif"
+        android:layout_gravity="center"/>
+
+    <!-- RecyclerView for song list -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/artist_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="10dp"
+        tools:listitem="@layout/your_song_list_item_layout" />
+
+</LinearLayout>

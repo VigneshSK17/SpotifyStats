@@ -5,11 +5,11 @@ plugins {
 }
 
 android {
-    namespace = "com.t1r2340.spotifystats"
+    namespace = "com.t1r2340.unwrappd"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.t1r2340.spotifystats"
+        applicationId = "com.t1r2340.unwrappd"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
