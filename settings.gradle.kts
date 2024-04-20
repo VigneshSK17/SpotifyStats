@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Spotify Stats"
+rootProject.name = "Unwrappd"
 include(":app")
  
